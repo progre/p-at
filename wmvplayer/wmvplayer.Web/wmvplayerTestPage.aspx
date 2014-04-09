@@ -59,12 +59,21 @@
 <body>
     <form id="form1" runat="server" style="height:100%">
     <div id="silverlightControlHost">
+        <script>
+            function loaded(sender, args) {
+                var sl = sender.getHost();
+                var ctrler = sl.Content.Controller;
+                ctrler.HostIp = "127.0.0.1:7144";
+                ctrler.Play("", "");
+            }
+        </script>
         <object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="100%">
 		  <param name="source" value="ClientBin/wmvplayer.xap"/>
 		  <param name="onError" value="onSilverlightError" />
 		  <param name="background" value="white" />
 		  <param name="minRuntimeVersion" value="5.0.61118.0" />
 		  <param name="autoUpgrade" value="true" />
+          <param name="onLoad" value="loaded" />
 		  <a href="http://go.microsoft.com/fwlink/?LinkID=149156&v=5.0.61118.0" style="text-decoration:none">
  			  <img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="Microsoft Silverlight の取得" style="border-style:none"/>
 		  </a>

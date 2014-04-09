@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Windows;
+using System.Windows.Browser;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -14,13 +15,14 @@ namespace wmvplayer
 {
     public partial class MainPage : UserControl
     {
+        public Controller Controller { get; private set; }
+
         public MainPage()
         {
             InitializeComponent();
 
-            var streamId = "";
-            var ip = "";
-            media.Source = new Uri("mms://127.0.0.1:7144/stream/" + streamId + ".wmv?tip=" + ip, UriKind.Absolute);
+            Controller = new Controller(media);
+            HtmlPage.RegisterScriptableObject("Controller", Controller);
         }
     }
 }

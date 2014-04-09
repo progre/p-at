@@ -6,5 +6,5 @@
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400">
 
-    <MediaElement Name="media" AutoPlay="True"></MediaElement>
+    <MediaElement Name="media"></MediaElement>
 </UserControl>
