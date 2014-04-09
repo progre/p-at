@@ -1,0 +1,5 @@
+clientbin/
+bin/
+obj/
+*.suo
+*.user
