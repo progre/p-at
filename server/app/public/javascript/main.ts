@@ -2,6 +2,8 @@
 /// <reference path="../../typings/linq.d.ts"/>
 /// <reference path="../../typings/promise.d.ts"/>
 
+declare var Silverlight: any;
+
 var root = '/';
 
 var app = angular.module('app', ['ngRoute', 'ngAnimate']);
@@ -17,11 +19,39 @@ app.config(['$routeProvider', '$locationProvider',
     }
 ]);
 app.controller('IndexController',
-    ['$scope', ($scope) => {
+    ['$scope', ($scope: any) => {
         $scope.players = [];
         $scope.play = () => {
-            $scope.players.push(0);
+            $scope.players.push(Date.now());
         };
     }]);
+
+app.directive('silverlight', () => ({
+    replace: true,
+    restrict: 'E',
+    link: (scope: any, element: JQuery, attrs: any) => {
+        Silverlight.createObject(
+            '/plugins/wmvplayer.xap',
+            element[0],
+            Date.now().toString(),// 一意な文字列
+            {
+                width: '320',
+                height: '240',
+                background: '#000',
+                version: '5.0'
+            },
+            {
+                onError: () => console.error('Error on Silverlight'),
+                onLoad: (sl: any, args: any) => {
+                    var ctrler = sl.Content.Controller;
+                    ctrler.LocalIp = attrs.localip;
+                    ctrler.Play(attrs.streamid, attrs.remoteip);
+                }
+            },
+            null, //初期化パラメータ
+            null //onLoad イベントに渡される値
+            );
+    }
+}));
 
 angular.bootstrap(<any>document, ['app']);

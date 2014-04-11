@@ -69,7 +69,8 @@ module.exports = function(grunt) {
         options: {
           module: 'amd',
           basePath: 'src/public',
-          sourceMap: true
+          sourceMap: true,
+          noImplicitAny: true
         }
       }
     },

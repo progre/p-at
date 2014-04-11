@@ -63,7 +63,7 @@
             function loaded(sender, args) {
                 var sl = sender.getHost();
                 var ctrler = sl.Content.Controller;
-                ctrler.HostIp = "127.0.0.1:7144";
+                ctrler.LocalIp = "127.0.0.1:7144";
                 ctrler.Play("", "");
             }
         </script>

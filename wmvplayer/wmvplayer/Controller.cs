@@ -20,7 +20,7 @@ namespace wmvplayer
         private string remoteIp = "";
 
         [ScriptableMemberAttribute]
-        public string HostIp { get; set; }
+        public string LocalIp { get; set; }
         [ScriptableMemberAttribute]
         public event SizeChangedEventHandler SizeChanged
         {
@@ -38,7 +38,7 @@ namespace wmvplayer
         {
             this.streamId = streamId;
             this.remoteIp = remoteIp;
-            media.Source = new Uri(string.Format("mms://{0}/stream/{1}.wmv?tip={2}", HostIp, streamId, remoteIp), UriKind.Absolute);
+            media.Source = new Uri(string.Format("mms://{0}/stream/{1}.wmv?tip={2}", LocalIp, streamId, remoteIp), UriKind.Absolute);
             media.Play();
         }
 
@@ -46,7 +46,7 @@ namespace wmvplayer
         public void Stop()
         {
             media.Stop();
-            media.Source = new Uri(string.Format("http://{0}/admin?cmd=stop&id={1}", HostIp, streamId));
+            media.Source = new Uri(string.Format("http://{0}/admin?cmd=stop&id={1}", LocalIp, streamId));
             media.Play();
         }
     }
