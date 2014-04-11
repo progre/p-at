@@ -11,7 +11,7 @@ declare module linqjs {
         Utils: {
             createLambda(expression: any): (...params: any[]) => any;
             createEnumerable<T>(getEnumerator: () => IEnumerator<T>): IEnumerable<T>;
-            createEnumerator<T>(initialize: () => void , tryGetNext: () => boolean, dispose: () => void ): IEnumerator<T>;
+            createEnumerator<T>(initialize: () => void, tryGetNext: () => boolean, dispose: () => void): IEnumerator<T>;
             extendTo(type: any): void;
         };
         choice<T>(...params: T[]): IEnumerable<T>;
@@ -33,7 +33,7 @@ declare module linqjs {
         rangeDown(start: number, count: number, step?: number): IEnumerable<number>;
         rangeTo(start: number, to: number, step?: number): IEnumerable<number>;
         repeat<T>(element: T, count?: number): IEnumerable<T>;
-        repeatWithFinalize<T>(initializer: () => T, finalizer: (element) => void ): IEnumerable<T>;
+        repeatWithFinalize<T>(initializer: () => T, finalizer: (element: any) => void): IEnumerable<T>;
         generate<T>(func: () => T, count?: number): IEnumerable<T>;
         toInfinity(start?: number, step?: number): IEnumerable<number>;
         toNegativeInfinity(start?: number, step?: number): IEnumerable<number>;
@@ -42,7 +42,7 @@ declare module linqjs {
     }
 
     interface IEnumerable<T> {
-        constructor(getEnumerator: () => IEnumerator<T>);
+        constructor(getEnumerator: () => IEnumerator<T>): any;
         getEnumerator(): IEnumerator<T>;
 
         // Extension Methods
@@ -183,9 +183,9 @@ declare module linqjs {
         toJSONString(replacer: any[], space: any): string;
         toJoinedString(separator?: string): string;
         toJoinedString<TResult>(separator: string, selector: (element: T, index: number) => TResult): string;
-        doAction(action: (element: T, index: number) => void ): IEnumerable<T>;
+        doAction(action: (element: T, index: number) => void): IEnumerable<T>;
         doAction(action: (element: T, index: number) => boolean): IEnumerable<T>;
-        forEach(action: (element: T, index: number) => void ): void;
+        forEach(action: (element: T, index: number) => void): void;
         forEach(action: (element: T, index: number) => boolean): void;
         write(separator?: string): void;
         write<TResult>(separator: string, selector: (element: T) => TResult): void;
@@ -197,12 +197,12 @@ declare module linqjs {
         letBind<TResult>(func: (source: IEnumerable<T>) => IEnumerable<TResult>): IEnumerable<TResult>;
         share(): IDisposableEnumerable<T>;
         memoize(): IDisposableEnumerable<T>;
-        catchError(handler: (exception: any) => void ): IEnumerable<T>;
-        finallyAction(finallyAction: () => void ): IEnumerable<T>;
+        catchError(handler: (exception: any) => void): IEnumerable<T>;
+        finallyAction(finallyAction: () => void): IEnumerable<T>;
         log(): IEnumerable<T>;
-        log<TValue>(selector: (element: T) => TValue ): IEnumerable<T>;
+        log<TValue>(selector: (element: T) => TValue): IEnumerable<T>;
         trace(message?: string): IEnumerable<T>;
-        trace<TValue>(message: string, selector: (element: T) => TValue ): IEnumerable<T>;
+        trace<TValue>(message: string, selector: (element: T) => TValue): IEnumerable<T>;
     }
 
     interface IOrderedEnumerable<T> extends IEnumerable<T> {
