@@ -113,12 +113,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    develop: {
-      server: {
-        file: 'app/server.js',
-        nodeArgs: ['--debug']
-      }
-    },
     watch: {
       jade: {
         files: ['src/public/**/*.jade'],

@@ -24,9 +24,8 @@
     "grunt-tsd": "*",
     "grunt-typescript": "*",
     "grunt-rename": "*",
-    "grunt-develop": "~0.3.0",
+    "grunt-express-server": "~0.4.13",
     "jit-grunt": "*",
-    "tsd": "*",
-    "grunt-express-server": "~0.4.13"
+    "tsd": "*"
   }
 }
