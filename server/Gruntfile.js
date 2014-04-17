@@ -1,22 +1,11 @@
-var modRewrite = require('connect-modrewrite');
-
 var projectConfig = {
   root: '/'
 };
 
-function rewriteMiddleware(connect, options) {
-  return [
-    modRewrite(['^' + projectConfig.root + '(?!html/).*\\.html$ /index.html [L]']),
-    projectConfig.root === '/' ? connect.static(options.base)
-      : function(req, res, next) {
-        req.url = req.url.replace(new RegExp('^' + projectConfig.root), '/');
-        return connect.static(options.base)(req, res, next);
-      }
-  ];
-}
-
 module.exports = function(grunt) {
-  require('jit-grunt')(grunt);
+  require('jit-grunt')(grunt, {
+    express: 'grunt-express-server'
+  });
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -63,7 +52,17 @@ module.exports = function(grunt) {
       }
     },
     typescript: {
-      base: {
+      server: {
+        src: ['src/**/*.ts', '!src/public/**/*.ts'],
+        dest: 'src/',
+        options: {
+          module: 'commonjs',
+          basePath: 'src',
+          sourceMap: true,
+          noImplicitAny: true
+        }
+      },
+      client: {
         src: ['src/public/**/*.ts'],
         dest: 'src/public/',
         options: {
@@ -107,19 +106,17 @@ module.exports = function(grunt) {
         }
       }
     },
-    connect: {
+    express: {
+      dev: {
+        options: {
+          script: 'app/server.js'
+        }
+      }
+    },
+    develop: {
       server: {
-        options: {
-          base: 'app/public',
-          middleware: rewriteMiddleware
-        }
-      },
-      keepalive: {
-        options: {
-          base: 'app/public',
-          middleware: rewriteMiddleware,
-          keepalive: true
-        }
+        file: 'app/server.js',
+        nodeArgs: ['--debug']
       }
     },
     watch: {
@@ -132,13 +129,20 @@ module.exports = function(grunt) {
         tasks: ['stylus'],
       },
       typescript: {
-        files: ['src/public/**/*.ts'],
+        files: ['src/**/*.ts'],
         tasks: ['build-typescript']
       },
       public: {
         files: ['app/public/**/*.*'],
         options: {
           livereload: true
+        }
+      },
+      server: {
+        files: ['app/**/*.*', '!app/public/**/*.*'],
+        tasks: ['serve'],
+        options: {
+          spawn: false
         }
       }
     },
@@ -155,12 +159,8 @@ module.exports = function(grunt) {
     'serve'
   ]);
   grunt.registerTask('serve', [
-    'connect:server',
+    'express',
     'watch'
-  ]);
-  grunt.registerTask('release-serve', [
-    'release-build',
-    'connect:keepalive',
   ]);
   grunt.registerTask('deploy', [
     'release-build',
@@ -190,9 +190,9 @@ module.exports = function(grunt) {
   ]);
   grunt.registerTask('configure-rename', function() {
     var files = grunt.file.expandMapping(
-      ['src/public/**/*.js', 'src/public/**/*.js.map'], 'app/public/', {
+      ['src/**/*.js', 'src/**/*.js.map'], 'app/', {
         rename: function(destBase, destPath) {
-          return destBase + destPath.replace(/^src\/public\//, '');
+          return destBase + destPath.replace(/^src\//, '');
         }
       }
     );
