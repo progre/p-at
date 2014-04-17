@@ -128,9 +128,13 @@ module.exports = function(grunt) {
         files: ['src/public/**/*.styl'],
         tasks: ['stylus'],
       },
-      typescript: {
-        files: ['src/**/*.ts'],
-        tasks: ['build-typescript']
+      typescriptClient: {
+        files: ['src/public/**/*.ts'],
+        tasks: ['build-typescript-client']
+      },
+      typescriptServer: {
+        files: ['src/**/*.ts', '!src/public/**/*.ts'],
+        tasks: ['build-typescript-server']
       },
       public: {
         files: ['app/public/**/*.*'],
@@ -184,6 +188,17 @@ module.exports = function(grunt) {
   ]);
   grunt.registerTask('build-typescript', [
     'typescript',
+    'postbuild-typescript'
+  ]);
+  grunt.registerTask('build-typescript-client', [
+    'typescript:client',
+    'postbuild-typescript'
+  ]);
+  grunt.registerTask('build-typescript-server', [
+    'typescript:server',
+    'postbuild-typescript'
+  ]);
+  grunt.registerTask('postbuild-typescript', [
     'configure-rename',
     'rename',
     'copy:typescript'
