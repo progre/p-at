@@ -1,5 +1,6 @@
 /// <reference path="typings/tsd.d.ts"/>
 /// <reference path="typings/log4js.d.ts"/>
+/// <reference path="typings/promise.d.ts"/>
 
 require('source-map-support').install();
 import log4js = require('log4js');
