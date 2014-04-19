@@ -1,6 +1,7 @@
 import express = require('express');
 require('express-resource');
 import functions = require('./infrastructure/functions');
+import secret = require('./secret');
 
 export = HttpServer;
 class HttpServer {
@@ -29,4 +30,6 @@ class HttpServer {
 }
 
 function useSession(app: express.Express) {
+    app.use(express.cookieParser(secret.cookieParserSecret));
+    app.use(express.session({ secret: secret.sessionSecret }));
 }
