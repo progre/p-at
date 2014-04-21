@@ -23,6 +23,7 @@ class HttpServer {
         var server = app.listen(port, () => {
             logger.info('Listening on port %d', server.address().port);
         });
+        log4js.getLogger('console').debug('debug mode.');// log4jsからコンソールへ何かしらの出力をしないと、grunt serveのwatchが効かなくなる
     }
 }
 

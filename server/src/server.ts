@@ -26,7 +26,12 @@ log4js.configure({
             type: 'dateFile',
             filename: LOG_DIRECTORY + '/server.log',
             pattern: '-yyyy-MM-dd'
-        }]
+        },
+        {
+            category: 'console',
+            type: 'console'
+        }
+    ]
 });
 
 new HttpServer().listen(port);
