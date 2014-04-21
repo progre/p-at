@@ -12,7 +12,9 @@
     "source-map-support": "~0.2.5",
     "express": "~4.0.0",
     "express-resource": "~1.0.0",
-    "es6-promise": "~0.1.1"
+    "es6-promise": "~0.1.1",
+    "cookie-parser": "~1.0.1",
+    "express-session": "~1.0.2"
   },
   "devDependencies": {
     "grunt": "*",
