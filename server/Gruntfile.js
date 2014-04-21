@@ -1,3 +1,5 @@
+var modRewrite = require('connect-modrewrite');
+
 var projectConfig = {
   root: '/'
 };
@@ -109,7 +111,15 @@ module.exports = function(grunt) {
     express: {
       dev: {
         options: {
+          middleware: rewriteMiddleware,
           script: 'app/server.js'
+        }
+      }
+    },
+    connect: {
+      dev: {
+        options: {
+          middleware: rewriteMiddleware
         }
       }
     },
@@ -177,22 +187,22 @@ module.exports = function(grunt) {
     'jade:release',
     'stylus',
     'tsd:refresh',
-    'build-typescript',
+    'build-ts',
     'requirejs'
   ]);
-  grunt.registerTask('build-typescript', [
+  grunt.registerTask('build-ts', [
     'typescript',
-    'postbuild-typescript'
+    'postbuild-ts'
   ]);
-  grunt.registerTask('build-typescript-client', [
+  grunt.registerTask('build-ts-client', [
     'typescript:client',
-    'postbuild-typescript'
+    'postbuild-ts'
   ]);
-  grunt.registerTask('build-typescript-server', [
+  grunt.registerTask('build-ts-server', [
     'typescript:server',
-    'postbuild-typescript'
+    'postbuild-ts'
   ]);
-  grunt.registerTask('postbuild-typescript', [
+  grunt.registerTask('postbuild-ts', [
     'configure-rename',
     'rename',
     'copy:typescript'
@@ -219,6 +229,18 @@ module.exports = function(grunt) {
     grunt.config('jade.debug.files', files);
   });
 };
+
+function rewriteMiddleware(connect, options) {
+  console.log('hoge')
+  return [
+    modRewrite(['^' + projectConfig.root + '(?!html/).*\\.html$ /index.html [L]']),
+    projectConfig.root === '/' ? connect.static(options.base)
+      : function(req, res, next) {
+        req.url = req.url.replace(new RegExp('^' + projectConfig.root), '/');
+        return connect.static(options.base)(req, res, next);
+      }
+  ];
+}
 
 function toObject(array) {
   var obj = {};
