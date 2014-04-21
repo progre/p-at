@@ -1,3 +1,8 @@
+div(ng-hide='portConnectable')
+  | 視聴にはPeerCastが必要です
+div(ng-show='portConnectable')
+  | ようこそ
+
 form.form-inline
   input.form-control(placeholder='ホストIP', ng-model='hostIp', style='margin-right: 0.5em;')
   input.form-control(placeholder='ストリームID', ng-model='streamId', style='margin-right: 0.5em;')

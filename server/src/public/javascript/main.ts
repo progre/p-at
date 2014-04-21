@@ -24,7 +24,7 @@ app.controller('IndexController', [
     ($scope: any, $http: ng.IHttpService) => {
         $http.get('/api/1/channel')
             .then(response => {
-                console.log(response.data);
+                $scope.portConnectable = response.data.portConnectable;
             })
             .catch(reason => {
                 console.error(reason);
