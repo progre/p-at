@@ -12,3 +12,7 @@ declare class Promise<T> {
     then<U>(onFulfilled: (val: T) => U, onRejected?: Function): Promise<U>;
     catch(onRejected: Function): any;
 }
+
+interface PromiseClass {
+    new <T>(func: (resolve: (aValue?: T) => void, reject: (aReason?: any) => void) => void): Promise<T>;
+}

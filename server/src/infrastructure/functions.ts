@@ -1,4 +1,4 @@
-var Promise = <new <T>(func: (resolve: (aValue?: T) => void, reject: (aReason?: any) => void) => void) => Promise<T>>require('es6-promise').Promise;
+var Promise: PromiseClass = require('es6-promise').Promise;
 import http = require('http');
 
 export function checkPort(ip: string, port: number) {
