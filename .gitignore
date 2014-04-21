@@ -1,6 +1,5 @@
 node_modules/
 dist/
-public/**/*.ts
 clientbin/
 bin/
 obj/
@@ -10,7 +9,9 @@ obj/
 *.map
 *.suo
 *.user
+*.log*
 
+**/public/**/*.ts
 **/typings/*/**/*.d.ts
 **/typings/tsd.d.ts
 
