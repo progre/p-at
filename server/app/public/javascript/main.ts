@@ -20,8 +20,15 @@ app.config([
     }
 ]);
 app.controller('IndexController', [
-    '$scope',
-    ($scope: any) => {
+    '$scope', '$http',
+    ($scope: any, $http: ng.IHttpService) => {
+        $http.get('/api/1/channel')
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(reason => {
+                console.error(reason);
+            });
         $scope.players = [];
         $scope.play = () => {
             $scope.players.push(Date.now());
