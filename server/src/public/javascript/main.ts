@@ -7,34 +7,10 @@ declare var Silverlight: any;
 var root = '/';
 
 var app = angular.module('app', ['ngRoute', 'ngAnimate']);
-//app.run(['$rootScope', '$http',
-//    ($rootScope: ng.IRootScopeService, $http: ng.IHttpService) => {
-//        $rootScope.$on('$routeChangeStart', (next: any, current: any) => {
-//            console.log('route change start');
-//            $http.get('/api/1/checkport').success(() => {
-//                console.log('success')
-//            }).error(() => {
-//                console.log('error')
-//                });
-//        });
-//    }
-//]);
-app.config(['$routeProvider', '$locationProvider', '$httpProvider',
-    ($routeProvider: ng.route.IRouteProvider, $locationProvider: ng.ILocationProvider, $httpProvider: ng.IHttpProvider) => {
+app.config([
+    '$routeProvider', '$locationProvider',
+    ($routeProvider: ng.route.IRouteProvider, $locationProvider: ng.ILocationProvider) => {
         $locationProvider.html5Mode(true);
-        $httpProvider.responseInterceptors.push([
-            '$q', '$location',
-            ($q: ng.IQService, $location: ng.ILocationService) =>
-                (promise: Promise<any>) =>
-                    promise.then(
-                        response => response,
-                        (response: any) => {
-                            if (response.status === 401) {
-                                $location.url('/login');
-                            }
-                            return $q.reject(response);
-                        })
-        ]);
         $routeProvider
             .when(root, {
                 templateUrl: root + 'html/index.html', controller: 'IndexController'
@@ -43,13 +19,15 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
             });
     }
 ]);
-app.controller('IndexController',
-    ['$scope', ($scope: any) => {
+app.controller('IndexController', [
+    '$scope',
+    ($scope: any) => {
         $scope.players = [];
         $scope.play = () => {
             $scope.players.push(Date.now());
         };
-    }]);
+    }
+]);
 
 app.directive('silverlight', () => ({
     replace: true,
