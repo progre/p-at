@@ -30,6 +30,7 @@
     "grunt-rename": "*",
     "grunt-express-server": "~0.4.13",
     "jit-grunt": "*",
-    "tsd": "*"
+    "tsd": "*",
+    "grunt-exec": "~0.4.5"
   }
 }

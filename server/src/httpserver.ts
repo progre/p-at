@@ -11,7 +11,7 @@ var accessLogger = log4js.getLogger('access');
 
 export = HttpServer;
 class HttpServer {
-    listen(port: number) {
+    listen(port: number, localIp: string) {
         var app = express();
         app.use(log);
         useSession(app);
@@ -20,7 +20,7 @@ class HttpServer {
         app.use((req: express.Request, res: express.Response)
             => res.sendfile(__dirname + '/public/index.html'));
 
-        var server = app.listen(port, () => {
+        var server = app.listen(port, localIp, () => {
             logger.info('Listening on port %d', server.address().port);
         });
         log4js.getLogger('console').debug('debug mode.');// log4jsからコンソールへ何かしらの出力をしないと、grunt serveのwatchが効かなくなる

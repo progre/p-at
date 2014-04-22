@@ -7,9 +7,10 @@ import fs = require('fs');
 import log4js = require('log4js');
 import HttpServer = require('./httpserver');
 
-var port = parseInt(process.argv[2], 10) || 8080;
+var localIp = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+var port = parseInt(process.argv[2], 10) || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
-var LOG_DIRECTORY = __dirname + '/../log';
+var LOG_DIRECTORY = (process.env.OPENSHIFT_DATA_DIR || __dirname + '/../') + 'log';
 if (!fs.existsSync(LOG_DIRECTORY)) {
     fs.mkdirSync(LOG_DIRECTORY, '777');
 }
@@ -34,4 +35,4 @@ log4js.configure({
     ]
 });
 
-new HttpServer().listen(port);
+new HttpServer().listen(port, localIp);

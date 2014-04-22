@@ -86,10 +86,9 @@ module.exports = function(grunt) {
       deploy: {
         files: [{
           expand: true,
-          cwd: 'app/public/',
           src: [
-            '**',
-            '!**/*.map', '!javascript/**'
+            'app/**', 'package.json',
+            '!**/*.map', '!app/public/javascript/**'
           ],
           dest: 'dist/',
           filter: 'isFile'
@@ -145,9 +144,19 @@ module.exports = function(grunt) {
       }
     },
     clean: {
-      dist: ['dist/*'],
+      dist: ['dist/*', '!.git/'],
       options: {
         force: true
+      }
+    },
+    exec: {
+      deploy: {
+        cwd: 'dist/',
+        cmd: [
+          'git add -A',
+          'git commit -a -m "update"',
+          'git push'
+        ].join('&&')
       }
     }
   });
@@ -163,7 +172,8 @@ module.exports = function(grunt) {
   grunt.registerTask('deploy', [
     'release-build',
     'clean:dist',
-    'copy:deploy'
+    'copy:deploy',
+    'exec:deploy'
   ]);
   grunt.registerTask('debug-build', [
     'configure-jade',
