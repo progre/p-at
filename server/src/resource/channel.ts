@@ -16,11 +16,13 @@ var channel = {
             onSuccess();
             return;
         }
-        logger.debug('ポート開放状況は不明です');
-        functions.checkPort(req.ip, session.port || 7144)
+        var ip = req.headers['x-forwarded-for'] || req.ip;
+        logger.debug(ip + 'のポート開放状況は不明です');
+        functions.checkPort(ip, session.port || 7144)
             .then(val => {
                 if (val) {
                     logger.debug('ポートが開放されていることを確認しました');
+                    session.portConnectable = true;
                     onSuccess();
                     return;
                 }
