@@ -4,6 +4,7 @@
     "url": "https://github.com/progre/template-grunt"
   },
   "private": true,
+  "main": "app/server.js",
   "scripts": {
     "test": "grunt release-build"
   },
