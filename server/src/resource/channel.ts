@@ -8,7 +8,14 @@ export = channel;
 var channel = {
     index: (req: express.Request, res: express.Response) => {
         function onSuccess() {
-            res.send({ portConnectable: true });
+            var list: number[] = [];
+            for (var i = 0; i < 100; i++) {
+                list.push(i);
+            }
+            res.send({
+                portConnectable: true,
+                channels: list
+            });
         }
 
         var session: any = req.session;

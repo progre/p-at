@@ -1,7 +1,17 @@
 div(ng-hide='portConnectable')
-  | 視聴にはPeerCastが必要です
-div(ng-show='portConnectable')
-  | ようこそ
+  .container
+    .panel.panel-warning
+      .panel-body
+        | 視聴にはPeerCastが必要です
+.col-xs-6(style='padding: 5px', ng-repeat='channel in channels')
+  button.btn.btn-default.col-xs-12
+    .pull-left(style='font-size: 3.5em; margin: 0 10px')
+      span.glyphicon.glyphicon-bullhorn
+    | ぷろぐれch<br>
+    | [プログラミング - ウェブ版YPブラウザを作る - <Free>]<br>
+    | 「第6回PeerCastハッカソン 6/6夜～6/8にやります」<br>
+
+.row
 
 form.form-inline
   input.form-control(placeholder='ホストIP', ng-model='hostIp', style='margin-right: 0.5em;')

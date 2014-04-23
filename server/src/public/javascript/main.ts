@@ -25,6 +25,7 @@ app.controller('IndexController', [
         $http.get('/api/1/channel')
             .then(response => {
                 $scope.portConnectable = response.data.portConnectable;
+                $scope.channels = response.data.channels;
             })
             .catch(reason => {
                 console.error(reason);
