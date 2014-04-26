@@ -239,7 +239,7 @@ declare module linqjs {
 }
 
 // export definition
-declare module 'linqjs' {
+declare module 'linq' {
     var Enumerable: linqjs.Enumerable;
     export = Enumerable;
 }

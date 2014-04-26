@@ -25,7 +25,16 @@ app.controller('IndexController', [
         $http.get('/api/1/channel')
             .then(response => {
                 $scope.portConnectable = response.data.portConnectable;
-                $scope.channels = response.data.channels;
+                $scope.channels = response.data.channels.map((x: any) => {
+                    console.log(x);
+                    x.line1 = x.name;
+                    var bandType = x.bandType.length > 0 ? '<' + x.bandType + '>' : '';
+                    x.line2 = [x.genre, x.desc, bandType]
+                        .filter(x => x.length > 0)
+                        .join(' - ');
+                    x.line3 = x.comment;
+                    return x;
+                });
             })
             .catch(reason => {
                 console.error(reason);

@@ -4,12 +4,12 @@ div(ng-hide='portConnectable')
       .panel-body
         | 視聴にはPeerCastが必要です
 .col-xs-6(style='padding: 5px', ng-repeat='channel in channels')
-  button.btn.btn-default.col-xs-12
-    .pull-left(style='font-size: 3.5em; margin: 0 10px')
+  button.btn.btn-default.col-xs-12(style='text-align: left;')
+    .pull-left(style='font-size: 3.1em; margin: 0 20px 0 5px')
       span.glyphicon.glyphicon-bullhorn
-    | ぷろぐれch<br>
-    | [プログラミング - ウェブ版YPブラウザを作る - <Free>]<br>
-    | 「第6回PeerCastハッカソン 6/6夜～6/8にやります」<br>
+    b {{channel.line1}}<br>
+    span [{{channel.line2}}]<br>
+    span(ng-show='channel.line3.length > 0') 「{{channel.line3}}」
 
 .row
 

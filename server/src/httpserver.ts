@@ -4,6 +4,7 @@ var session: typeof express.session = require('express-session');
 var cookieParser: typeof express.cookieParser = require('cookie-parser');
 import log4js = require('log4js');
 import functions = require('./infrastructure/functions');
+import YPWatcher = require('./infrastructure/ypwatcher');
 import channel = require('./resource/channel');
 
 var logger = log4js.getLogger('server');
@@ -11,19 +12,27 @@ var accessLogger = log4js.getLogger('access');
 
 export = HttpServer;
 class HttpServer {
+    private app = express();
+    private ypWatcher: YPWatcher;
+
     listen(port: number, localIp: string) {
-        var app = express();
+        this.ypWatcher = new YPWatcher(port);
+        this.ypWatcher.beginWatchYP();
+        this.startWebServer(this.app, port, localIp, this.ypWatcher);
+        log4js.getLogger('console').debug('debug mode.');// log4jsからコンソールへ何かしらの出力をしないと、grunt serveのwatchが効かなくなる
+    }
+
+    private startWebServer(app: express.Express, port: number, localIp: string, ypWatcher: YPWatcher) {
         app.use(log);
         useSession(app);
         app.use(express.static(__dirname + '/public'));
-        app.resource('api/1/channel', channel);
+        app.resource('api/1/channel', channel.controller(ypWatcher));
         app.use((req: express.Request, res: express.Response)
             => res.sendfile(__dirname + '/public/index.html'));
 
         var server = app.listen(port, localIp, () => {
             logger.info('Listening on port %d', server.address().port);
         });
-        log4js.getLogger('console').debug('debug mode.');// log4jsからコンソールへ何かしらの出力をしないと、grunt serveのwatchが効かなくなる
     }
 }
 
