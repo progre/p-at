@@ -19,7 +19,7 @@ transform() {
 
 // navbar-fixed-top
 // ----------------
-body {
+main.sticky {
   padding-top: 70px;
 }
 footer.navbar {
@@ -29,10 +29,10 @@ footer.navbar {
 
 // Sticky footer
 // -------------
-html, body {
+html, body, #view {
   height: 100%;
 }
-main {
+main.sticky {
   min-height: 100%;
   height: auto !important;
   height: 100%;
@@ -60,4 +60,18 @@ main {
 
 body {
   background-image: url("/img/greyzz.png");
+}
+
+.two-pain main {
+  width: 61.8%;
+  float: left;
+}
+
+.two-pain .player {
+  position: absolute;
+}
+
+.two-pain aside {
+  width: 38.2%
+  float: right;
 }

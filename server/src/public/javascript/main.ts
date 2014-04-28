@@ -1,12 +1,13 @@
-/// <reference path="../../typings/tsd.d.ts"/>
+ï»¿/// <reference path="../../typings/tsd.d.ts"/>
 /// <reference path="../../typings/linq.d.ts"/>
 /// <reference path="../../typings/promise.d.ts"/>
-
 declare var Silverlight: any;
+import PlayerCtrler = require('./ctrler/playerctrler');
 
 var root = '/';
 
-var app = angular.module('app', ['ngRoute', 'ngAnimate']);
+var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ngCookies']);
+
 app.config([
     '$routeProvider', '$locationProvider',
     ($routeProvider: ng.route.IRouteProvider, $locationProvider: ng.ILocationProvider) => {
@@ -14,11 +15,14 @@ app.config([
         $routeProvider
             .when(root, {
                 templateUrl: root + 'html/index.html', controller: 'IndexController'
+            }).when(root + 'player.html', {
+                templateUrl: root + 'html/player.html', controller: 'PlayerCtrler'
             }).otherwise({
                 templateUrl: root + 'html/404.html'
             });
     }
 ]);
+
 app.controller('IndexController', [
     '$scope', '$http',
     ($scope: any, $http: ng.IHttpService) => {
@@ -26,7 +30,6 @@ app.controller('IndexController', [
             .then(response => {
                 $scope.portConnectable = response.data.portConnectable;
                 $scope.channels = response.data.channels.map((x: any) => {
-                    console.log(x);
                     x.line1 = x.name;
                     var bandType = x.bandType.length > 0 ? '<' + x.bandType + '>' : '';
                     x.line2 = [x.genre, x.desc, bandType]
@@ -46,6 +49,8 @@ app.controller('IndexController', [
     }
 ]);
 
+app.controller('PlayerCtrler', PlayerCtrler);
+
 app.directive('silverlight', () => ({
     replace: true,
     restrict: 'E',
@@ -53,10 +58,10 @@ app.directive('silverlight', () => ({
         Silverlight.createObject(
             '/plugins/wmvplayer.xap',
             element[0],
-            Date.now().toString(),// ˆêˆÓ‚È•¶š—ñ
+            Date.now().toString(),// ä¸€æ„ãªæ–‡å­—åˆ—
             {
-                width: '320',
-                height: '240',
+                width: window.innerWidth,
+                height: window.innerHeight,
                 background: '#000',
                 version: '5.0'
             },
@@ -64,12 +69,15 @@ app.directive('silverlight', () => ({
                 onError: () => console.error('Error on Silverlight'),
                 onLoad: (sl: any, args: any) => {
                     var ctrler = sl.Content.Controller;
+                    ctrler.addEventListener('click', () => {
+                        element.click();
+                    });
                     ctrler.LocalIp = attrs.localip;
                     ctrler.Play(attrs.streamid, attrs.remoteip);
                 }
             },
-            null, //‰Šú‰»ƒpƒ‰ƒ[ƒ^
-            null //onLoad ƒCƒxƒ“ƒg‚É“n‚³‚ê‚é’l
+            null, //åˆæœŸåŒ–ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+            null //onLoad ã‚¤ãƒ™ãƒ³ãƒˆã«æ¸¡ã•ã‚Œã‚‹å€¤
             );
     }
 }));

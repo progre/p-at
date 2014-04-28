@@ -5,6 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400">
-
-    <MediaElement Name="media"></MediaElement>
+    <Grid>
+        <Rectangle Fill="#000"></Rectangle>
+        <MediaElement Name="media"></MediaElement>
+    </Grid>
 </UserControl>

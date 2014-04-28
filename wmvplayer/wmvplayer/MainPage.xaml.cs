@@ -21,7 +21,7 @@ namespace wmvplayer
         {
             InitializeComponent();
 
-            Controller = new Controller(media);
+            Controller = new Controller(this, media);
             HtmlPage.RegisterScriptableObject("Controller", Controller);
         }
     }

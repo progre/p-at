@@ -15,6 +15,7 @@ namespace wmvplayer
 {
     public class Controller
     {
+        private readonly UserControl userControl;
         private readonly MediaElement media;
         private string streamId = "";
         private string remoteIp = "";
@@ -28,8 +29,16 @@ namespace wmvplayer
             remove { this.media.SizeChanged -= value; }
         }
 
-        public Controller(MediaElement media)
+        [ScriptableMemberAttribute]
+        public event MouseButtonEventHandler click
         {
+            add { userControl.MouseLeftButtonUp += value; }
+            remove { userControl.MouseLeftButtonUp -= value; }
+        }
+
+        public Controller(UserControl userControl, MediaElement media)
+        {
+            this.userControl = userControl;
             this.media = media;
         }
 

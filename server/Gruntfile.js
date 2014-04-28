@@ -83,6 +83,14 @@ module.exports = function(grunt) {
           filter: 'isFile'
         }]
       },
+      plugins: {
+        files: [{
+          expand: true,
+          cwd: '../wmvplayer/wmvplayer/Bin/Release/',
+          src: ['wmvplayer.xap'],
+          dest: 'app/public/plugins/'
+        }]
+      },
       deploy: {
         files: [{
           expand: true,

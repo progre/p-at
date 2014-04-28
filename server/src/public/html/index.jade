@@ -1,22 +1,47 @@
-div(ng-hide='portConnectable')
-  .container
-    .panel.panel-warning
-      .panel-body
-        | 視聴にはPeerCastが必要です
-.col-xs-6(style='padding: 5px', ng-repeat='channel in channels')
-  button.btn.btn-default.col-xs-12(style='text-align: left;')
-    .pull-left(style='font-size: 3.1em; margin: 0 20px 0 5px')
-      span.glyphicon.glyphicon-bullhorn
-    b {{channel.line1}}<br>
-    span [{{channel.line2}}]<br>
-    span(ng-show='channel.line3.length > 0') 「{{channel.line3}}」
+header
+  nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
+    .container-fluid
+      .navbar-header
+        button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-ex1-collapse')
+          span.sr-only Toggle navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.navbar-brand(href='/', style='font-family: "Open Sans", "sans-serif";')
+          | p@
+      .collapse.navbar-collapse.navbar-ex1-collapse
+        form.navbar-form(role='search', style='border: none;')
+          .input-group.col-sm-6.col-md-5.col-lg-4
+            input.form-control(type='text', placeholder='Search')
+            span.input-group-btn
+              button.btn.btn-default(type='button')
+                span.glyphicon.glyphicon-search
 
-.row
+main.sticky
+  div(ng-hide='portConnectable', style='display: none;')
+    .jumbotron
+      h1 p@
+      p p@はPeerCastの配信をブラウザで視聴できるサービスです。
+      p p@の利用には、PeerCastの設定が必要です。まずはこちらから PeerCastStation をダウンロードしてください。
+      h2 既にPeerCastを起動している場合
+      p TCPポート番号 [     ] [再試行]
+  .col-xs-6(style='padding: 5px', ng-repeat='channel in channels')
+    a(href='player.html?streamid={{channel.id}}&remoteip={{channel.ip}}')
+      button.btn.btn-default.col-xs-12(style='text-align: left;')
+        .pull-left(style='font-size: 3.1em; margin: 0 20px 0 5px')
+          span.glyphicon.glyphicon-bullhorn
+        b {{channel.line1}}<br>
+        span [{{channel.line2}}]<br>
+        span(ng-show='channel.line3.length > 0') 「{{channel.line3}}」
 
-form.form-inline
-  input.form-control(placeholder='ホストIP', ng-model='hostIp', style='margin-right: 0.5em;')
-  input.form-control(placeholder='ストリームID', ng-model='streamId', style='margin-right: 0.5em;')
-  input.form-control(placeholder='リモートIP', ng-model='remoteIp', style='margin-right: 1em;')
-  button.btn.btn-default(ng-click='play()') 再生
-div(ng-repeat='player in players')
-  silverlight(localip='127.0.0.1:7143', streamid='', remoteip='')
+  .row
+
+  form.form-inline
+    input.form-control(placeholder='ホストIP', ng-model='hostIp', style='margin-right: 0.5em;')
+    input.form-control(placeholder='ストリームID', ng-model='streamId', style='margin-right: 0.5em;')
+    input.form-control(placeholder='リモートIP', ng-model='remoteIp', style='margin-right: 1em;')
+    button.btn.btn-default(ng-click='play()') 再生
+  div(ng-repeat='player in players')
+    silverlight(localip='127.0.0.1:7143', streamid='', remoteip='')
+  #push
+footer.navbar.navbar-default
