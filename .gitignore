@@ -11,11 +11,11 @@ obj/
 *.user
 *.log*
 
-**/app/public/**/*.ts
+server/app/public/**/*.ts
 
 **/typings/*/**/*.d.ts
 **/typings/tsd.d.ts
 
 !Gruntfile.js
-!public/javascript/config.js
-!public/javascript/vendor/**
+!server/app/public/javascript/config.js
+!server/app/public/javascript/vendor/**
