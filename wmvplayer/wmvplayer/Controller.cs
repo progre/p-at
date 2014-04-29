@@ -23,7 +23,12 @@ namespace wmvplayer
         [ScriptableMemberAttribute]
         public string LocalIp { get; set; }
         [ScriptableMemberAttribute]
-        public event SizeChangedEventHandler SizeChanged
+        public double width { get { return this.media.Width; } }
+        [ScriptableMemberAttribute]
+        public double height { get { return this.media.Height; } }
+
+        [ScriptableMemberAttribute]
+        public event SizeChangedEventHandler sizeChanged
         {
             add { this.media.SizeChanged += value; }
             remove { this.media.SizeChanged -= value; }

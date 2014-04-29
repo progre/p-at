@@ -2,7 +2,8 @@
 /// <reference path="../../typings/linq.d.ts"/>
 /// <reference path="../../typings/promise.d.ts"/>
 declare var Silverlight: any;
-import PlayerCtrler = require('./ctrler/playerctrler');
+import PlayerCtrler = require('./module/playerctrler');
+import directives = require('./module/directives');
 
 var root = '/';
 
@@ -50,36 +51,6 @@ app.controller('IndexController', [
 ]);
 
 app.controller('PlayerCtrler', PlayerCtrler);
-
-app.directive('silverlight', () => ({
-    replace: true,
-    restrict: 'E',
-    link: (scope: any, element: JQuery, attrs: any) => {
-        Silverlight.createObject(
-            '/plugins/wmvplayer.xap',
-            element[0],
-            Date.now().toString(),// 一意な文字列
-            {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                background: '#000',
-                version: '5.0'
-            },
-            {
-                onError: () => console.error('Error on Silverlight'),
-                onLoad: (sl: any, args: any) => {
-                    var ctrler = sl.Content.Controller;
-                    ctrler.addEventListener('click', () => {
-                        element.click();
-                    });
-                    ctrler.LocalIp = attrs.localip;
-                    ctrler.Play(attrs.streamid, attrs.remoteip);
-                }
-            },
-            null, //初期化パラメータ
-            null //onLoad イベントに渡される値
-            );
-    }
-}));
+app.directive('silverlight', directives.silverlight);
 
 angular.bootstrap(<any>document, ['app']);

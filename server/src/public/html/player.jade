@@ -1,9 +1,8 @@
-style
-  | body { overflow: hidden; }
-.two-pain(style='height: 100%')
+.two-pain
   main
-    silverlight.player(localip='{{localIp}}', streamid='{{streamId}}', remoteip='{{remoteIp}}')
+    .dummy
+    .silverlight.player(localip='{{localIp}}', streamid='{{streamId}}', remoteip='{{remoteIp}}')
     .info
       h4 ぷろぐれch
-  aside(style='height: 100%')
-    iframe(src='http://jbbs.shitaraba.net/bbs/lite/read.cgi/radio/22607/1398170911/l50', height='100%', width='100%', border=0)
+  aside
+    iframe(src='http://jbbs.shitaraba.net/bbs/lite/read.cgi/radio/22607/1398170911/l50', height='100%', width='100%', frameborder='0')

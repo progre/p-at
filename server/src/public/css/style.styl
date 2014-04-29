@@ -62,16 +62,27 @@ body {
   background-image: url("/img/greyzz.png");
 }
 
+.two-pain {
+  height: 100%;
+}
+
 .two-pain main {
   width: 61.8%;
   float: left;
 }
 
-.two-pain .player {
-  position: absolute;
+.two-pain aside {
+  width: 38.2%;
+  height: 100%;
+  float: right;
 }
 
-.two-pain aside {
-  width: 38.2%
-  float: right;
+.player {
+  position: absolute;
+  transition: width 0.125s, height 0.125s;
+}
+
+.dummy {
+  width: 100%;
+  background-color: #000;
 }
