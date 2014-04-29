@@ -11,7 +11,8 @@ obj/
 *.user
 *.log*
 
-**/public/**/*.ts
+**/app/public/**/*.ts
+
 **/typings/*/**/*.d.ts
 **/typings/tsd.d.ts
 
