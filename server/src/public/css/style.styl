@@ -31,6 +31,7 @@ footer.navbar {
 // -------------
 html, body, #view {
   height: 100%;
+  margin: 0;
 }
 main.sticky {
   min-height: 100%;
@@ -64,6 +65,7 @@ body {
 
 .two-pain {
   height: 100%;
+  padding-top: 50px; // header
 }
 
 .two-pain main {
@@ -77,12 +79,21 @@ body {
   float: right;
 }
 
-.player {
+.two-pain .player {
   position: absolute;
-  transition: width 0.125s, height 0.125s;
+  transition: top 0.125s, width 0.125s, height 0.125s;
+  z-index: 2000;
 }
 
-.dummy {
+.two-pain .player object {
+  display: block;
+}
+
+.two-pain .dummy {
   width: 100%;
   background-color: #000;
+}
+
+.two-pain .thread {
+  display: block;
 }

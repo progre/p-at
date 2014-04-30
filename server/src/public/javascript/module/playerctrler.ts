@@ -4,7 +4,7 @@ export = PlayerCtrler;
 var PlayerCtrler = [
     '$scope', '$routeParams', '$cookies',
     ($scope: any, $routeParams: any, $cookies: any) => {
-        $('body').css({ overflow: 'visible' });// transition’†‚É•ÏX‚·‚é‚Ætransition‚ª~‚Ü‚é
+        // transition’†‚Éoverflow‚ğ•ÏX‚·‚é‚Ætransition‚ª~‚Ü‚é
         $('.dummy').css({
             width: '100%',
             height: '200px'

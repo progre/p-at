@@ -1,8 +1,15 @@
+header
+  nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
+    .container-fluid
+      .navbar-header
+        a.navbar-brand(href='/', style='font-family: "Open Sans", "sans-serif";')
+          span.glyphicon.glyphicon-chevron-left(style='margin-right: 6px')
+          | 一覧に戻る
 .two-pain
   main
-    .dummy
     .silverlight.player(localip='{{localIp}}', streamid='{{streamId}}', remoteip='{{remoteIp}}')
+    .dummy
     .info
       h4 ぷろぐれch
   aside
-    iframe(src='http://jbbs.shitaraba.net/bbs/lite/read.cgi/radio/22607/1398170911/l50', height='100%', width='100%', frameborder='0')
+    iframe.thread(style='height: 100%; width: 100%; border: none;', src='http://jbbs.shitaraba.net/bbs/lite/read.cgi/radio/22607/1398170911/l50')

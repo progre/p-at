@@ -33,15 +33,6 @@ main.sticky
         b {{channel.line1}}<br>
         span [{{channel.line2}}]<br>
         span(ng-show='channel.line3.length > 0') 「{{channel.line3}}」
-
   .row
-
-  form.form-inline
-    input.form-control(placeholder='ホストIP', ng-model='hostIp', style='margin-right: 0.5em;')
-    input.form-control(placeholder='ストリームID', ng-model='streamId', style='margin-right: 0.5em;')
-    input.form-control(placeholder='リモートIP', ng-model='remoteIp', style='margin-right: 1em;')
-    button.btn.btn-default(ng-click='play()') 再生
-  div(ng-repeat='player in players')
-    silverlight(localip='127.0.0.1:7143', streamid='', remoteip='')
   #push
 footer.navbar.navbar-default

@@ -43,31 +43,25 @@ export var silverlight = () => ({
 export function fullscreenToWindow(player: JQuery) {
     var ctrler = (<any>$('.player object')[0]).Content.Controller;
     // player.width():?=ctrler.width:ctrler.height
-    var newWidth = window.innerWidth * 0.618;
+    var newWidth = document.documentElement.clientWidth * 0.618;
+    var newHeight = newWidth * (ctrler.height || 2) / (ctrler.width || 3);
     player.css({
+        top: $('.dummy').position().top + 1, // 1px‚¸‚ê‚Ä‚é
         width: newWidth,
-        height: newWidth * (ctrler.height || 2) / (ctrler.width || 3),
-        //transition: [
-        //    'width' + transitionOption,
-        //    'height' + transitionOption
-        //]
+        height: newHeight
     });
     $('.dummy').css({
-        display: 'none',
-        width: window.innerWidth * 0.618,
-        height: window.innerWidth * ctrler.height / ctrler.width,
+        width: newWidth,
+        height: newHeight
     });
     console.log('window');
 }
 
 export function windowToFullscreen(player: JQuery) {
     player.css({
+        top: 0,
         width: '100%',
-        height: '100%',
-        //transition: [
-        //    'width' + transitionOption,
-        //    'height' + transitionOption
-        //]
+        height: '100%'
     });
     console.log('fullscreen');
 }
