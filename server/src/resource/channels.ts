@@ -1,19 +1,43 @@
 ﻿import log4js = require('log4js');
+import Enumerable = require('linq');
 import express = require('express');
 import functions = require('../infrastructure/functions');
 import YPWatcher = require('../infrastructure/ypwatcher');
 
 var logger = log4js.getLogger('server');
 
+// classにしたいけど、thisが上手く作用しないので無理
 export function controller(ypWatcher: YPWatcher) {
     return {
-        index(req: express.Request, res: express.Response) {
+        index: (req: express.Request, res: express.Response) => {
             requirePortConnectable(req,
                 () => {
                     logger.debug('チャンネル数: ' + ypWatcher.channels.length);
                     res.send({
                         portConnectable: true,
                         channels: ypWatcher.channels
+                    });
+                },
+                () => {
+                    res.send({ portConnectable: false });
+                }, () => {
+                    res.send(500);
+                });
+        },
+        show: (req: express.Request, res: express.Response) => {
+            requirePortConnectable(req,
+                () => {
+                    var id = req.params.channel;
+                    var channel = Enumerable.from(ypWatcher.channels)
+                        .where(x => x.id === id)
+                        .firstOrDefault();
+                    if (channel == null) {
+                        res.send(404);
+                        return;
+                    }
+                    res.send({
+                        portConnectable: true,
+                        channel: channel
                     });
                 },
                 () => {

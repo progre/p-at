@@ -10,8 +10,8 @@ var root = '/';
 var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ngCookies']);
 
 app.config([
-    '$routeProvider', '$locationProvider',
-    ($routeProvider: ng.route.IRouteProvider, $locationProvider: ng.ILocationProvider) => {
+    '$routeProvider', '$locationProvider', '$sceDelegateProvider',
+    ($routeProvider: ng.route.IRouteProvider, $locationProvider: ng.ILocationProvider, $sceDelegateProvider: ng.ISCEDelegateProvider) => {
         $locationProvider.html5Mode(true);
         $routeProvider
             .when(root, {
@@ -21,13 +21,14 @@ app.config([
             }).otherwise({
                 templateUrl: root + 'html/404.html'
             });
+        $sceDelegateProvider.resourceUrlWhitelist(['self', 'http:**']);// iframeのクロスドメイン許可
     }
 ]);
 
 app.controller('IndexController', [
     '$scope', '$http',
     ($scope: any, $http: ng.IHttpService) => {
-        $http.get('/api/1/channel')
+        $http.get('/api/1/channels')
             .then(response => {
                 $scope.portConnectable = response.data.portConnectable;
                 $scope.channels = response.data.channels.map((x: any) => {

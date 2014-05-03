@@ -5,7 +5,7 @@ var cookieParser: typeof express.cookieParser = require('cookie-parser');
 import log4js = require('log4js');
 import functions = require('./infrastructure/functions');
 import YPWatcher = require('./infrastructure/ypwatcher');
-import channel = require('./resource/channel');
+import channels = require('./resource/channels');
 
 var logger = log4js.getLogger('server');
 var accessLogger = log4js.getLogger('access');
@@ -26,7 +26,7 @@ class HttpServer {
         app.use(log);
         useSession(app);
         app.use(express.static(__dirname + '/public'));
-        app.resource('api/1/channel', channel.controller(ypWatcher));
+        app.resource('api/1/channels', channels.controller(ypWatcher));
         app.use((req: express.Request, res: express.Response)
             => res.sendfile(__dirname + '/public/index.html'));
 
