@@ -2,7 +2,7 @@
 import Channel = require('./channel');
 
 export function fromIndexTxt(body: string, yp: string) {
-    var list = Enumerable.from(body.split('\n'))
+    return Enumerable.from(body.split('\n'))
         .where(line => line.length > 0)
         .select(line => line.split('<>'))
         .select(entries => entries.map(unparseSpecialLetter))
@@ -27,23 +27,6 @@ export function fromIndexTxt(body: string, yp: string) {
             entries[17],
             entries[18] === '1',
             yp));
-    switch (yp) {
-        case 'TP':
-            // Free, Open, Over, 3Mbps Overを取り出す。descからは削除
-            list = list.select(channel => {
-                var r = channel.desc.match(/(?: - )?&lt;(.*)&gt;$/);
-                if (r == null) {
-                    channel.bandType = '';
-                    return channel;
-                }
-                channel.bandType = r[1];
-                channel.desc = channel.desc.substring(0, (<any>r).index);
-                return channel;
-            });
-        default:
-            break;
-    }
-    return list.toArray();
 }
 
 function hoursMinToMin(hmm: string) {

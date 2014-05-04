@@ -5,6 +5,8 @@ import log4js = require('log4js');
 var logger = log4js.getLogger('server');
 import channelsfactory = require('../domain/entity/channelsfactory');
 import Channel = require('../domain/entity/channel');
+import tp = require('../domain/entity/tp');
+import dp = require('../domain/entity/dp');
 
 export = YPWatcher;
 class YPWatcher {
@@ -22,29 +24,34 @@ class YPWatcher {
     watchYP() {
         var channels = Enumerable.from(<Channel[]>[]);
         var ypInfos = Enumerable.from(<Channel[]>[]);
-        var start = Date.now();
-        logger.debug('Start TP Request.');
+        var start: number;
         var self = this;
         Promise.cast()
             .then(() => {
-                return get('http://temp.orz.hm/yp/index.txt?port=' + this.localPort);
-            })
-            .then(body => {
-                var list = channelsfactory.fromIndexTxt(body, 'TP');
-                channels = channels.concat(list.filter(x => x.name !== 'TPからのお知らせ◆お知らせ'));
-                ypInfos = ypInfos.concat(list.filter(x => x.name === 'TPからのお知らせ◆お知らせ'));
-                logger.debug('End TP Request. ' + (Date.now() - start) + 'ms, ' + list.length + 'channel(s)');
-
+                logger.debug('Start TP Request.');
                 start = Date.now();
-                logger.debug('Start DP Request.');
-                return get('http://dp.prgrssv.net/index.txt');
+                return get(tp.url(this.localPort));
             })
             .then(body => {
-                var list = channelsfactory.fromIndexTxt(body, 'DP');
-                channels = channels.concat(list.filter(x => x.name !== 'DP◆お知らせ'));
-                ypInfos = ypInfos.concat(list.filter(x => x.name === 'DP◆お知らせ'));
-                logger.debug('End DP Request. ' + (Date.now() - start) + 'ms, ' + list.length + 'channel(s)');
+                var time = Date.now() - start;
 
+                var result = tp.getChannels(body);
+                channels = channels.concat(result[0]);
+                ypInfos = ypInfos.concat(result[1]);
+
+                logger.debug('End TP Request. ' + time + 'ms, ' + result[0].length + ' channel(s), ' + result[1].length + ' info(s)');
+                logger.debug('Start DP Request.');
+                start = Date.now();
+                return get(dp.url());
+            })
+            .then(body => {
+                var time = Date.now() - start;
+
+                var result = dp.getChannels(body);
+                channels = channels.concat(result[0]);
+                ypInfos = ypInfos.concat(result[1]);
+
+                logger.debug('End DP Request. ' + time + 'ms, ' + result[0].length + ' channel(s), ' + result[1].length + ' info(s)');
                 logger.debug('sum is ' + channels.count() + 'channel(s)');
                 channels = channels.orderBy(x => x.uptimeMin);// 新しい順に並べる
                 self.channels = channels.toArray();
