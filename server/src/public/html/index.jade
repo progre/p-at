@@ -14,18 +14,26 @@ header
           p p@の利用には、PeerCastの設定が必要です。まずはこちらから PeerCastStation をダウンロードしてください。
           h2 既にPeerCastを起動している場合
           p TCPポート番号 [     ] [再試行]
-      .row(style='padding: 5px', ng-repeat='channel in channels')
-        a(href='player.html?streamid={{channel.id}}&remoteip={{channel.ip}}')
-          button.btn.btn-default.col-xs-12(style='text-align: left;')
-            .pull-left(style='font-size: 2em; margin: 0 20px 0 5px')
-              span.glyphicon.glyphicon-bullhorn
-            b {{channel.line1}}<br>
-            div(style='text-overflow: ellipsis; overflow: hidden;')
-              span(style='margin-left: 1em;') [{{channel.line2}}]
-              span(style='margin-left: 1em;', ng-show='channel.line3.length > 0') 「{{channel.line3}}」
-      .row
+      div
+        .row(style='padding: 5px', ng-repeat='channel in channels')
+          a(href='player.html?streamid={{channel.id}}&remoteip={{channel.ip}}')
+            button.btn.btn-default.col-xs-12(style='text-align: left;')
+              .pull-left(style='font-size: 2em; margin: 0 20px 0 5px')
+                span.glyphicon.glyphicon-bullhorn
+              b {{channel.line1}}<br>
+              div(style='text-overflow: ellipsis; overflow: hidden;')
+                span(style='margin-left: 1em;') [{{channel.line2}}]
+                span(style='margin-left: 1em;', ng-show='channel.line3.length > 0') 「{{channel.line3}}」
+      .panel.panel-default(style='margin: 30px -10px 0')
+        .panel-heading YPからのお知らせ
+        .list-group
+          .list-group-item(ng-repeat='info in ypInfos')
+            b {{info.line1}}<br>
+            div(style='padding-left: 1em;')
+              span [{{info.line2}}]<br>
+              span(ng-show='info.line3.length > 0') 「{{info.line3}}」
     aside.col-xs-4
-      .affix(style="width: 33.3333%; right: 15px; padding-left: 10px;")
+      .affix
         .panel.panel-default
           .panel-heading 最近の配信
           .list-group
@@ -35,17 +43,13 @@ header
         .panel.panel-default
           .panel-heading イベント
           .list-group
-            .list-group-item なにか
-            .list-group-item なにか
-            .list-group-item なにか
-        .panel.panel-default
-          .panel-heading YPからのお知らせ
-          .list-group
-            .list-group-item(ng-repeat='info in ypInfos')
+            .list-group-item(ng-repeat='info in events')
               b {{info.line1}}<br>
               div(style='padding-left: 1em;')
-                span [{{info.line2}}]<br>
-                span(ng-show='info.line3.length > 0') 「{{info.line3}}」
+                span [{{info.line2}}]
+                div
+                  a(href='{{info.track.url}}', target='_blank') 詳細
+                  a(href='{{info.url}}', target='_blank', style='margin-left: 1em;') Wiki
 
       // 配信開始のお知らせ
   #push

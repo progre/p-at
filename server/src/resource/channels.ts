@@ -16,7 +16,8 @@ export function controller(ypWatcher: YPWatcher) {
                     res.send({
                         portConnectable: true,
                         channels: ypWatcher.channels,
-                        ypInfos: ypWatcher.ypInfos
+                        ypInfos: ypWatcher.ypInfos,
+                        events: ypWatcher.events
                     });
                 },
                 () => {

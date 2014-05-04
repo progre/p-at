@@ -4,9 +4,12 @@ var IndexCtrler = [
     ($scope: any, $http: ng.IHttpService) => {
         $http.get('/api/1/channels')
             .then(response => {
-                $scope.portConnectable = response.data.portConnectable;
-                $scope.channels = response.data.channels.map(addPropertiesForView);
-                $scope.ypInfos = response.data.ypInfos.map(addPropertiesForView);
+                var data = response.data;
+                $scope.portConnectable = data.portConnectable;
+                $scope.channels = data.channels.map(addPropertiesForView);
+                $scope.ypInfos = data.ypInfos.map(addPropertiesForView);
+                $scope.events = data.events.map(addPropertiesForView);
+                data.events.forEach((x:any) => console.log(x));
             })
             .catch(reason => {
                 console.error(reason);
