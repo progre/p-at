@@ -43,9 +43,9 @@ header
           .list-group
             .list-group-item(ng-repeat='info in ypInfos')
               b {{info.line1}}<br>
-              div(style='text-overflow: ellipsis; overflow: hidden;')
-                span(style='margin-left: 1em;') [{{info.line2}}]<br>
-                span(style='margin-left: 1em;', ng-show='info.line3.length > 0') 「{{info.line3}}」
+              div(style='padding-left: 1em;')
+                span [{{info.line2}}]<br>
+                span(ng-show='info.line3.length > 0') 「{{info.line3}}」
 
       // 配信開始のお知らせ
   #push
