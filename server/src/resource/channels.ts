@@ -15,7 +15,8 @@ export function controller(ypWatcher: YPWatcher) {
                     logger.debug('チャンネル数: ' + ypWatcher.channels.length);
                     res.send({
                         portConnectable: true,
-                        channels: ypWatcher.channels
+                        channels: ypWatcher.channels,
+                        ypInfos: ypWatcher.ypInfos
                     });
                 },
                 () => {

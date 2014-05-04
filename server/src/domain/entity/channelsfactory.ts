@@ -5,6 +5,7 @@ export function fromIndexTxt(body: string, yp: string) {
     var list = Enumerable.from(body.split('\n'))
         .where(line => line.length > 0)
         .select(line => line.split('<>'))
+        .select(entries => entries.map(unparseSpecialLetter))
         .select(entries => new Channel(
             entries[0],
             entries[1],
@@ -28,22 +29,17 @@ export function fromIndexTxt(body: string, yp: string) {
             yp));
     switch (yp) {
         case 'TP':
-            list = list
-                .where(x => x.name !== 'TPからのお知らせ◆お知らせ')
             // Free, Open, Over, 3Mbps Overを取り出す。descからは削除
-                .select(channel => {
-                    var r = channel.desc.match(/(?: - )?&lt;(.*)&gt;$/);
-                    if (r == null) {
-                        channel.bandType = '';
-                        return channel;
-                    }
-                    channel.bandType = r[1];
-                    channel.desc = channel.desc.substring(0, (<any>r).index);
+            list = list.select(channel => {
+                var r = channel.desc.match(/(?: - )?&lt;(.*)&gt;$/);
+                if (r == null) {
+                    channel.bandType = '';
                     return channel;
-                });
-        case 'DP':
-            list = list
-                .where(x => x.name !== 'DP◆お知らせ');
+                }
+                channel.bandType = r[1];
+                channel.desc = channel.desc.substring(0, (<any>r).index);
+                return channel;
+            });
         default:
             break;
     }
@@ -53,4 +49,10 @@ export function fromIndexTxt(body: string, yp: string) {
 function hoursMinToMin(hmm: string) {
     var nums = hmm.split(':').map(x=> parseInt(x, 10));
     return nums[0] * 60 + nums[1];
+}
+
+function unparseSpecialLetter(str: string) {
+    return str.replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&');
 }
