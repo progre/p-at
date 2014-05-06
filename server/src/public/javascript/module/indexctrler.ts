@@ -14,10 +14,6 @@ var IndexCtrler = [
             .catch(reason => {
                 console.error(reason);
             });
-        $scope.players = [];
-        $scope.play = () => {
-            $scope.players.push(Date.now());
-        };
     }
 ];
 
