@@ -24,12 +24,21 @@ var PlayerCtrler = [
             }
         });
 
+        // お気に入り
+        $scope.favorite = false;
+        $scope.addFavorite = () => {
+            $scope.favorite = true;
+        };
+        $scope.removeFavorite = () => {
+            $scope.favorite = false;
+        };
+
         $http.get('/api/1/channels/' + $routeParams.streamid)
             .then(res => {
                 var channel = res.data.channel;
                 $scope.name = channel.name;
                 var url = getMobileView(channel.url);
-                angular.element('aside').append(getThreadViewerElement(url));
+                angular.element('aside').append(getThreadViewerElement(url));// iframeを読み込み時に仕込んでおくとヒストリを汚してしまう為、動的に追加する
             }).catch(reason => {
                 console.error(reason);
             });
