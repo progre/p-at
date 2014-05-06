@@ -74,10 +74,11 @@ var dummyStyle = 'width: 100%; background-color: #333;';
 var defaultSilverlightStyle = {
     position: 'absolute',
     display: 'block',
+    transition: 'top 0.125s, width 0.125s, height 0.125s',
+
     top: 0,
     width: '100%',
     height: '100%',
-    transition: 'top 0.125s, width 0.125s, height 0.125s',
     zIndex: 2000
 };
 // transition’†‚Éoverflow‚ğ•ÏX‚·‚é‚Ætransition‚ª~‚Ü‚é
@@ -86,12 +87,14 @@ function getWindowSilverlightStyle(dummy: JQuery) {
     return {
         top: dummy.position().top + 1, // 1px‚¸‚ê‚Ä‚é
         width: dummy.width(),
-        height: dummy.height()
+        height: dummy.height(),
+        zIndex: ''// todo: 0.125s“K‰‚ğ’x‚ç‚¹‚é
     };
 }
 
 var fullscreenSilverlightStyle = {
     top: 0,
     width: '100%',
-    height: '100%'
+    height: '100%',
+    zIndex: 2000
 };
