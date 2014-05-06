@@ -7,8 +7,7 @@ header
           | 一覧に戻る
 .player-page.two-pain
   main
-    .silverlight.player(localip='{{localIp}}', streamid='{{streamId}}', remoteip='{{remoteIp}}')
-    .dummy
+    silverlight.player(localip='{{localIp}}', streamid='{{streamId}}', remoteip='{{remoteIp}}')
     .panel.panel-default
       .panel-heading
         span(style='font-size: 22px; cursor: pointer;', ng-show='favorite', ng-click='removeFavorite()')
