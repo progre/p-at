@@ -100,3 +100,9 @@ var fullscreenSilverlightStyle = {
     zIndex: 2000,
     transitionTimingFunction: 'ease'
 };
+
+export var channelList = () => ({
+    restrict: 'E',
+    replace: true,
+    templateUrl: '/html/list.html'
+});

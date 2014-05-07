@@ -14,21 +14,7 @@ header
           p p@の利用には、PeerCastの設定が必要です。まずはこちらから PeerCastStation をダウンロードしてください。
           h2 既にPeerCastを起動している場合
           p TCPポート番号 [     ] [再試行]
-      .media-list
-        .media(style='margin-top: 0; margin-bottom: 0px', ng-repeat='channel in channels')
-          span.pull-left(style='font-size: 3em; margin: 2px 12px 0 12px', ng-switch='channel.genre')
-            span.glyphicon.glyphicon-wrench(ng-switch-when='プログラミング')
-            span.glyphicon.glyphicon-bullhorn(ng-switch-default)
-          .media-body
-            a(ng-href='player.html?streamid={{channel.id}}&remoteip={{channel.ip}}', target='_self')
-              button.btn.btn-default(style='text-align: left; width: 100%; padding-left: 0; padding-right: 0;')
-                div(style='margin-left: 12px; margin-right: 12px;')
-                  b {{channel.line1}}
-                  span.label.label-primary(style='margin-left: 10px;', ng-show='channel.favorite') お気に入り
-                  br
-                  div(style='text-overflow: ellipsis; overflow: hidden;')
-                    span(style='margin-left: 1em;') [{{channel.line2}}]
-                    span(style='margin-left: 1em;', ng-show='channel.line3.length > 0') 「{{channel.line3}}」
+      channellist
       .panel.panel-default
         .panel-heading YPからのお知らせ
         .list-group
