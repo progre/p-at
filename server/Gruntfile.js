@@ -37,6 +37,7 @@ module.exports = function(grunt) {
       }
     },
     tsd: {
+      // 追加でインストールする場合: tsd query [モジュール名] -rosa install
       reinstall: {
         options: {
           command: 'reinstall',

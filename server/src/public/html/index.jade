@@ -14,18 +14,19 @@ header
           p p@の利用には、PeerCastの設定が必要です。まずはこちらから PeerCastStation をダウンロードしてください。
           h2 既にPeerCastを起動している場合
           p TCPポート番号 [     ] [再試行]
-      div
-        .row(style='padding: 2px', ng-repeat='channel in channels')
-          a(ng-href='player.html?streamid={{channel.id}}&remoteip={{channel.ip}}', target='_self')
-            button.btn.btn-default.col-xs-12(style='text-align: left;')
-              .pull-left(style='font-size: 2em; margin: 0 20px 0 5px')
-                ng-switch(on='channel.genre')
-                  span.glyphicon.glyphicon-wrench(ng-switch-when='プログラミング')
-                  span.glyphicon.glyphicon-bullhorn(ng-switch-default)
-              b {{channel.line1}}<br>
-              div(style='text-overflow: ellipsis; overflow: hidden;')
-                span(style='margin-left: 1em;') [{{channel.line2}}]
-                span(style='margin-left: 1em;', ng-show='channel.line3.length > 0') 「{{channel.line3}}」
+      .row(style='padding: 2px', ng-repeat='channel in channels')
+        a(ng-href='player.html?streamid={{channel.id}}&remoteip={{channel.ip}}', target='_self')
+          button.btn.btn-default.col-xs-12(style='text-align: left;')
+            .pull-left(style='font-size: 2em; margin: 0 20px 0 5px')
+              ng-switch(on='channel.genre')
+                span.glyphicon.glyphicon-wrench(ng-switch-when='プログラミング')
+                span.glyphicon.glyphicon-bullhorn(ng-switch-default)
+            b {{channel.line1}}
+            span.label.label-primary(style='margin-left: 10px;', ng-show='channel.favorite') お気に入り
+            br
+            div(style='text-overflow: ellipsis; overflow: hidden;')
+              span(style='margin-left: 1em;') [{{channel.line2}}]
+              span(style='margin-left: 1em;', ng-show='channel.line3.length > 0') 「{{channel.line3}}」
       .panel.panel-default(style='margin: 30px -13px 0')
         .panel-heading YPからのお知らせ
         .list-group

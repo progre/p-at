@@ -243,3 +243,7 @@ declare module 'linq' {
     var Enumerable: linqjs.Enumerable;
     export = Enumerable;
 }
+declare module 'linqjs' {
+    var Enumerable: linqjs.Enumerable;
+    export = Enumerable;
+}

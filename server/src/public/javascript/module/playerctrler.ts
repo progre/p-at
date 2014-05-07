@@ -1,26 +1,36 @@
 ﻿import directives = require('./directives');
+import CookieInfrastructure = require('../infrastructure/cookieinfrastructure');
+import UserInfoRepos = require('../domain/repos/userinforepos');
 
 export = PlayerCtrler;
 var PlayerCtrler = [
     '$scope', '$routeParams', '$cookies', '$http',
     ($scope: any, $routeParams: any, $cookies: any, $http: ng.IHttpService) => {
+        var userInfoRepos = new UserInfoRepos(new CookieInfrastructure($cookies));
+        var userInfo = userInfoRepos.get();
+
         $scope.localIp = '127.0.0.1:' + ($cookies.localPort || 7144);
         $scope.streamId = $routeParams.streamid;
         $scope.remoteIp = $routeParams.remoteip;
-
-        // お気に入り
-        $scope.favorite = false;
-        $scope.addFavorite = () => {
-            $scope.favorite = true;
-        };
-        $scope.removeFavorite = () => {
-            $scope.favorite = false;
-        };
 
         $http.get('/api/1/channels/' + $routeParams.streamid)
             .then(res => {
                 var channel = res.data.channel;
                 $scope.name = channel.name;
+
+                // お気に入り
+                $scope.favorite = userInfo.favoriteChannels.has(channel.name);
+                $scope.addFavorite = () => {
+                    userInfo.favoriteChannels.add(channel.name);
+                    userInfoRepos.put(userInfo);
+                    $scope.favorite = true;
+                };
+                $scope.removeFavorite = () => {
+                    userInfo.favoriteChannels.delete(channel.name);
+                    userInfoRepos.put(userInfo);
+                    $scope.favorite = false;
+                };
+
                 var url = getMobileView(channel.url);
                 angular.element('aside').append(getThreadViewerElement(url));// iframeを読み込み時に仕込んでおくとヒストリを汚してしまう為、動的に追加する
             }).catch(reason => {

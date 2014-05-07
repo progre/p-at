@@ -10,9 +10,9 @@ header
     silverlight.player(localip='{{localIp}}', streamid='{{streamId}}', remoteip='{{remoteIp}}')
     .panel.panel-default
       .panel-heading
-        span.clickable-star(style='line-height: 0;', ng-show='favorite', ng-click='removeFavorite()')
+        span.clickable-star(style='line-height: 0;', ng-show='favorite === true', ng-click='removeFavorite()')
           span.glyphicon.glyphicon-star(style='color: #fb3')
           span.glyphicon.glyphicon-star-empty(style='color: #b71; margin-left: -1em;')
-        span.clickable-star.glyphicon.glyphicon-star(style='color: #bbb;', ng-hide='favorite', ng-click='addFavorite()')
+        span.clickable-star.glyphicon.glyphicon-star(style='color: #bbb;', ng-show='favorite === false', ng-click='addFavorite()')
         h4(style='margin-left: 10px; display: inline;') {{name}}
   aside
