@@ -88,7 +88,8 @@ function getWindowSilverlightStyle(dummy: JQuery) {
         top: dummy.position().top + 1, // 1px‚¸‚ê‚Ä‚é
         width: '61.8%',
         height: dummy.height(),
-        zIndex: ''// todo: 0.125s“K‰ž‚ð’x‚ç‚¹‚é
+        zIndex: '',// todo: 0.125s“K‰ž‚ð’x‚ç‚¹‚é
+        transitionTimingFunction: 'ease-in'
     };
 }
 
@@ -96,5 +97,6 @@ var fullscreenSilverlightStyle = {
     top: 0,
     width: '100%',
     height: '100%',
-    zIndex: 2000
+    zIndex: 2000,
+    transitionTimingFunction: 'ease'
 };
