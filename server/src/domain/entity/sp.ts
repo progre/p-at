@@ -1,15 +1,11 @@
 ﻿import channelsfactory = require('./channelsfactory');
 import Channel = require('./channel');
-import log4js = require('log4js');
 
-var osirase = 'TPからのお知らせ◆お知らせ';
-var upload = 'Temporary yellow Pages◆アップロード帯域';
+var osirase = /^SP ※お知らせ/;
+var upload = 'SP◆アップロード帯域';
 
 export function url(localPort: number) {
-    if (localPort === 8080) {
-        log4js.getLogger('server').warn('TPは8080ではアクセスできないっぽい');
-    }
-    return 'http://temp.orz.hm/yp/index.txt?port=' + localPort;
+    return 'http://bayonet.ddo.jp/sp/index.txt?port=' + localPort;
 }
 
 export function getChannels(body: string) {
@@ -28,7 +24,7 @@ export function getChannels(body: string) {
         .where(x => x.name !== upload);
 
     return [
-        list.where(x => x.name !== osirase).toArray(),
-        list.where(x => x.name === osirase).toArray()
+        list.where(x => !osirase.test(x.name)).toArray(),
+        list.where(x => osirase.test(x.name)).toArray()
     ];
 }
