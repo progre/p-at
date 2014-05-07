@@ -86,7 +86,7 @@ var defaultSilverlightStyle = {
 function getWindowSilverlightStyle(dummy: JQuery) {
     return {
         top: dummy.position().top + 1, // 1px‚¸‚ê‚Ä‚é
-        width: dummy.width(),
+        width: '61.8%',
         height: dummy.height(),
         zIndex: ''// todo: 0.125s“K‰ž‚ð’x‚ç‚¹‚é
     };
