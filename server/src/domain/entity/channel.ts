@@ -21,6 +21,7 @@ class Channel {
         public comment = '',
         public direct = false,
         public yp = '',
-        public bandType = '') {
+        public bandType = '',
+        public category = '') {
     }
 }
