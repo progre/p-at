@@ -24,9 +24,15 @@ export var silverlight = () => ({
             () => element.click(),
             (width, height) => {
                 dummy.css('height', dummy.width() * height / width);
-                if (!fullscreen) {
-                    sl.css('height', dummy.width() * height / width);
-                }
+                sl.css('height', dummy.width() * height / width);
+                // ウィンドウサイズ変更時にプレイヤーウィンドウのサイズを変える
+                resize(() => {
+                    dummy.css('height', dummy.width() * height / width);
+                    sl.css({
+                        transition: '',
+                        height: dummy.width() * height / width
+                    });
+                });
             });
         element.append(sl);
         sl.css(getWindowSilverlightStyle(dummy));
@@ -101,3 +107,13 @@ export var channelList = () => ({
     replace: true,
     templateUrl: '/html/list.html'
 });
+
+function resize(onResize: Function) {
+    var timer: number = null;
+    $(window).resize(function () {
+        if (timer != null) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(() => onResize(), 10);
+    });
+}
