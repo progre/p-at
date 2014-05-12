@@ -11,7 +11,7 @@ export var silverlight = () => ({
     link: (scope: any, element: JQuery, attrs: any) => {
         var chrome = window.navigator.userAgent.indexOf('Chrome') !== -1;
 
-        var fullscreen = true;
+        var fullscreen = false;
 
         var dummy = element.children('.dummy');
         dummy.css('height', dummy.width() * 3 / 4);
@@ -29,16 +29,11 @@ export var silverlight = () => ({
                 }
             });
         element.append(sl);
+        sl.css(getWindowSilverlightStyle(dummy));
 
         element.click(function (eventObject) {
-            if (fullscreen) {
-                sl.css(getWindowSilverlightStyle(dummy));
-                fullscreen = false;
-            } else {
-                sl.css(fullscreenSilverlightStyle);
-                fullscreen = true;
-            }
         });
+        // todo: リファクタリング
     }
 });
 
