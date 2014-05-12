@@ -39,6 +39,7 @@ function hoursMinToMin(hmm: string) {
 function unparseSpecialLetter(str: string) {
     return str.replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
+        .replace(/&#039;/g, '\'')
         .replace(/&amp;/g, '&');
 }
 
