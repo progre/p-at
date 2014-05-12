@@ -46,9 +46,9 @@ function unparseSpecialLetter(str: string) {
 function getCategory(genre: string, desc: string) {
     var filters = [
         { category: 'Adult', regex: /18x|x18|r-18|18禁/i },
-        { category: 'Drawing', regex: /お絵かき|oekaki/i },
+        { category: 'Creating', regex: /お絵かき|oekaki|模型/i },
         { category: 'Shogi', regex: /将棋/i },
-        { category: 'Programming', regex: /プログラミング|programming|開発/i },
+        { category: 'Engineering', regex: /プログラミング|programming|開発|電子工作/i },
         { category: 'Slot', regex: /slot/i },
         { category: 'Talk', regex: /雑談/i },
         { category: 'Game/TA', regex: /(^|\W|\d)R?TA/ },
