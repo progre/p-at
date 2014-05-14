@@ -54,7 +54,8 @@ function getCategory(genre: string, desc: string) {
         { category: 'Game/TA', regex: /(^|\W|\d)R?TA/ },
         { category: 'Game/MMO', regex: /mmo|diablo/i },
         { category: 'Game/FPS', regex: /fps/i },
-        { category: 'Game/RPG', regex: /rpg|ff|dq|ドラクエ|ドラゴンクエスト|ポケモン/i },
+        { category: 'Game/RTS', regex: /rts|lol/i },
+        { category: 'Game/RPG', regex: /rpg|ff|えふえふ|dq|ドラクエ|テイルズオブ|ドラゴンクエスト|ポケモン/i },
         { category: 'Game/Social', regex: /social|艦これ|パズドラ|モバマス/i },
     ];
     var filters2 = [
