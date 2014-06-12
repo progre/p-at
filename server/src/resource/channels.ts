@@ -21,7 +21,24 @@ export function controller(ypWatcher: YPWatcher) {
                     });
                 },
                 () => {
-                    res.send({ portConnectable: false });
+                    res.send({
+                        portConnectable: false,
+                        channels: ypWatcher.channels.map(x => {
+                            var channel = x.clone();
+                            channel.id = '00000000000000000000000000000000';
+                            channel.ip = '';
+                            if (channel.bandType !== '' && channel.bandType !== 'Free') {
+                                console.log(channel.bandType);
+                                channel.name = '（このチャンネルの情報はPeerCast導入後に表示されます）';
+                                channel.genre = '';
+                                channel.desc = '';
+                                channel.comment = '';
+                            }
+                            return channel;
+                        }),
+                        ypInfos: ypWatcher.ypInfos,
+                        events: ypWatcher.events
+                    });
                 }, () => {
                     res.send(500);
                 });
@@ -52,6 +69,7 @@ export function controller(ypWatcher: YPWatcher) {
 }
 
 function requirePortConnectable(req: express.Request, onConnectable: Function, onUnconnectable: Function, onError: Function) {
+    return onUnconnectable();
     var session: any = req.session;
     if (session.portConnectable) {
         onConnectable();

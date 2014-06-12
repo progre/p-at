@@ -29,10 +29,14 @@ var IndexCtrler = [
 
 function addPropertiesForView(x: any, userInfo: UserInfo) {
     x.line1 = x.name;
-    var bandType = x.bandType.length > 0 ? '<' + x.bandType + '>' : '';
-    x.line2 = [x.genre, x.desc, bandType]
-        .filter(x => x.length > 0)
-        .join(' - ');
+    if (x.genre === '' && x.desc === '') {
+        x.line2 = '';
+    } else {
+        var line = [x.genre, x.desc]
+            .filter(x => x.length > 0)
+            .join(' - ');
+        x.line2 = '[' + line + ']';
+    }
     x.line3 = x.comment;
     x.favorite = userInfo.favoriteChannels.has(x.name);
     return x;

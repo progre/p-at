@@ -24,4 +24,31 @@ class Channel {
         public bandType = '',
         public category = '') {
     }
+
+    clone() {
+        return new Channel(
+            this.name,
+            this.id,
+            this.ip,
+            this.url,
+            this.genre,
+            this.desc,
+            this.listeners,
+            this.relays,
+            this.bitrate,
+            this.type,
+            {
+                creator: this.track.creator,
+                album: this.track.album,
+                title: this.track.title,
+                url: this.track.url
+            },
+            this.uptimeMin,
+            this.comment,
+            this.direct,
+            this.yp,
+            this.bandType,
+            this.category
+        );
+    }
 }

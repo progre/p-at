@@ -16,7 +16,7 @@ export function getChannels(body: string) {
     var list = channelsfactory.fromIndexTxt(body, 'TP')
     // Free, Open, Over, 3Mbps Overを取り出す。descからは削除
         .select(channel => {
-            var r = channel.desc.match(/(?: - )?&lt;(.*)&gt;$/);
+            var r = channel.desc.match(/(?: - )?<(.*)>$/);
             if (r == null) {
                 channel.bandType = '';
                 return channel;

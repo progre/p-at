@@ -16,12 +16,14 @@ ul.media-list
       span.glyphicon.glyphicon-send(style='color: #469;', ng-switch-when='Game/Other')
       span.glyphicon.glyphicon-bullhorn(style='color: #8c7;', ng-switch-default)
     .media-body
-      a(ng-href='player.html?streamid={{channel.id}}&remoteip={{channel.ip}}', target='_self')
-        button.btn.btn-default(style='text-align: left; width: 100%; padding-left: 0; padding-right: 0;')
+      a(ng-href='{{ !portConnectable ? "" : "player.html?streamid=" + channel.id + "&remoteip=" + channel.ip }}', target='_self', title='{{ !portConnectable ? "PeerCastの導入後に視聴可能になります" : "" }}')
+        button.btn.btn-default(style='text-align: left; width: 100%; padding-left: 0; padding-right: 0;', ng-disabled='!portConnectable')
           div(style='margin-left: 12px; margin-right: 12px;')
-            b {{channel.line1}}
+            ng-switch(on='channel.id')
+              span(ng-switch-when='00000000000000000000000000000000') {{channel.line1}}
+              b(ng-switch-default) {{channel.line1}}
             span.label.label-primary(style='margin-left: 10px;', ng-show='channel.favorite') お気に入り
             br
             div(style='text-overflow: ellipsis; overflow: hidden;')
-              span(style='margin-left: 1em;') [{{channel.line2}}]
+              span(style='margin-left: 1em;') {{channel.line2}}
               span(style='margin-left: 1em;', ng-show='channel.line3.length > 0') 「{{channel.line3}}」
