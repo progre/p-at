@@ -24,6 +24,10 @@ var IndexCtrler = [
             .catch(reason => {
                 console.error(reason);
             });
+
+        $scope.isClickable = (channel: any)
+            => $scope.portConnectable
+            && channel.id !== '00000000000000000000000000000000';
     }
 ];
 
