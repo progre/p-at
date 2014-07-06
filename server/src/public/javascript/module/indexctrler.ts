@@ -12,7 +12,7 @@ var IndexCtrler = [
 
         $http.get('/api/1/channels')
             .then(response => {
-                var data = response.data;
+                var data: any = response.data;
                 $scope.portConnectable = data.portConnectable;
                 $scope.channels = Enumerable.from(<any[]>data.channels)
                     .select(x => addPropertiesForView(x, userInfo))

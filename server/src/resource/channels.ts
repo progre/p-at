@@ -10,12 +10,25 @@ var logger = log4js.getLogger('server');
 export function controller(ypWatcher: YPWatcher) {
     return {
         index: (req: express.Request, res: express.Response) => {
+            var channels = Enumerable.from(ypWatcher.channels)
+                .select(x => {
+                    if (x.type === 'FLV') {
+                        x = x.clone();
+                        x.id = '00000000000000000000000000000000';
+                        x.ip = '';
+                        x.name = '（このチャンネルはp@では再生できません）';
+                        x.genre = '';
+                        x.desc = '';
+                        x.comment = '';
+                    }
+                    return x;
+                });
             requirePortConnectable(req,
                 () => {
-                    logger.debug('チャンネル数: ' + ypWatcher.channels.length);
+                    logger.debug('チャンネル数: ' + channels.count());
                     res.send({
                         portConnectable: true,
-                        channels: ypWatcher.channels,
+                        channels: channels.toArray(),
                         ypInfos: ypWatcher.ypInfos,
                         events: ypWatcher.events
                     });
@@ -23,19 +36,18 @@ export function controller(ypWatcher: YPWatcher) {
                 () => {
                     res.send({
                         portConnectable: false,
-                        channels: ypWatcher.channels.map(x => {
+                        channels: channels.select(x => {
                             var channel = x.clone();
                             channel.id = '00000000000000000000000000000000';
                             channel.ip = '';
                             if (channel.bandType !== '' && channel.bandType !== 'Free') {
-                                console.log(channel.bandType);
                                 channel.name = '（このチャンネルの情報はPeerCast導入後に表示されます）';
                                 channel.genre = '';
                                 channel.desc = '';
                                 channel.comment = '';
                             }
                             return channel;
-                        }),
+                        }).toArray(),
                         ypInfos: ypWatcher.ypInfos,
                         events: ypWatcher.events
                     });
@@ -69,7 +81,6 @@ export function controller(ypWatcher: YPWatcher) {
 }
 
 function requirePortConnectable(req: express.Request, onConnectable: Function, onUnconnectable: Function, onError: Function) {
-    return onUnconnectable();
     var session: any = req.session;
     if (session.portConnectable) {
         onConnectable();

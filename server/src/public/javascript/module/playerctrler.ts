@@ -15,7 +15,7 @@ var PlayerCtrler = [
 
         $http.get('/api/1/channels/' + $routeParams.streamid)
             .then(res => {
-                var channel = res.data.channel;
+                var channel = (<any>res.data).channel;
                 $scope.name = channel.name;
 
                 // お気に入り
