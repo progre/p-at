@@ -16,7 +16,7 @@ class HttpServer {
     private ypWatcher: YPWatcher;
 
     listen(port: number, localIp: string) {
-        this.ypWatcher = new YPWatcher(7144/*port*/);
+        this.ypWatcher = new YPWatcher(80);
         this.ypWatcher.beginWatchYP();
         this.startWebServer(this.app, port, localIp, this.ypWatcher);
         log4js.getLogger('console').debug('debug mode.');// log4jsからコンソールへ何かしらの出力をしないと、grunt serveのwatchが効かなくなる

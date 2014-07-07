@@ -3,6 +3,7 @@ import Channel = require('./channel');
 
 var osirase = /^SP ※お知らせ/;
 var upload = 'SP◆アップロード帯域';
+var portDenied = 'SP◆ポート未開放';
 
 export function url(localPort: number) {
     return 'http://bayonet.ddo.jp/sp/index.txt?port=' + localPort;
@@ -21,7 +22,7 @@ export function getChannels(body: string) {
             channel.desc = channel.desc.substring(0, (<any>r).index);
             return channel;
         })
-        .where(x => x.name !== upload);
+        .where(x => x.name !== upload && x.name !== portDenied);
 
     return [
         list.where(x => !osirase.test(x.name)).toArray(),

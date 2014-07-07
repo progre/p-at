@@ -42,16 +42,16 @@ class YPWatcher {
                 ypInfos = ypInfos.concat(result[1]);
                 logger.debug('End TP Request. ' + time + 'ms, ' + result[0].length + ' channel(s), ' + result[1].length + ' info(s)');
 
-            //     logger.debug('Start SP Request.');
-            //     start = Date.now();
-            //     return get(sp.url(this.localPort));
-            // })
-            // .then(body => {
-            //     var time = Date.now() - start;
-            //     var result = sp.getChannels(body);
-            //     channels = channels.concat(result[0]);
-            //     ypInfos = ypInfos.concat(result[1]);
-            //     logger.debug('End SP Request. ' + time + 'ms, ' + result[0].length + ' channel(s), ' + result[1].length + ' info(s)');
+                logger.debug('Start SP Request.');
+                start = Date.now();
+                return get(sp.url(this.localPort));
+            })
+            .then(body => {
+                var time = Date.now() - start;
+                var result = sp.getChannels(body);
+                channels = channels.concat(result[0]);
+                ypInfos = ypInfos.concat(result[1]);
+                logger.debug('End SP Request. ' + time + 'ms, ' + result[0].length + ' channel(s), ' + result[1].length + ' info(s)');
 
                 logger.debug('Start DP Request.');
                 start = Date.now();
