@@ -23,6 +23,12 @@ class HttpServer {
     }
 
     private startWebServer(app: express.Express, port: number, localIp: string, ypWatcher: YPWatcher) {
+        app.get('/*', (req: express.Request, res: express.Response, next: () => void) => {
+            if (req.host.match(/^www/) == null) {
+                return next();
+            }
+            res.redirect('http://' + req.host.replace(/^www\./, '') + req.url);
+        });
         app.use(log);
         useSession(app);
         app.use(express.static(__dirname + '/public'));
