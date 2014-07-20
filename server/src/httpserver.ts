@@ -6,6 +6,7 @@ import log4js = require('log4js');
 import functions = require('./infrastructure/functions');
 import YPWatcher = require('./infrastructure/ypwatcher');
 import channels = require('./resource/channels');
+import search = require('./resource/search');
 
 var logger = log4js.getLogger('server');
 var accessLogger = log4js.getLogger('access');
@@ -33,6 +34,7 @@ class HttpServer {
         useSession(app);
         app.use(express.static(__dirname + '/public'));
         app.resource('api/1/channels', channels.controller(ypWatcher));
+        app.resource('api/1/search', search.controller(ypWatcher));
         app.use((req: express.Request, res: express.Response)
             => res.sendfile(__dirname + '/public/index.html'));
 

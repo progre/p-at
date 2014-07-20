@@ -23,7 +23,7 @@ export function controller(ypWatcher: YPWatcher) {
                     }
                     return x;
                 });
-            requirePortConnectable(req,
+            functions.requirePortConnectable(req,
                 () => {
                     logger.debug('チャンネル数: ' + channels.count());
                     res.send({
@@ -56,7 +56,7 @@ export function controller(ypWatcher: YPWatcher) {
                 });
         },
         show: (req: express.Request, res: express.Response) => {
-            requirePortConnectable(req,
+            functions.requirePortConnectable(req,
                 () => {
                     var id = req.params.channel;
                     var channel = Enumerable.from(ypWatcher.channels)
@@ -78,30 +78,4 @@ export function controller(ypWatcher: YPWatcher) {
                 });
         }
     };
-}
-
-function requirePortConnectable(req: express.Request, onConnectable: Function, onUnconnectable: Function, onError: Function) {
-    var session: any = req.session;
-    if (session.portConnectable) {
-        onConnectable();
-        return;
-    }
-    var ip = req.headers['x-forwarded-for'] || req.ip;
-    var port = session.port || 7144;
-    logger.debug(ip + ':' + port + 'のポート開放状況は不明です');
-    functions.checkPort(ip, port)
-        .then(val => {
-            if (val) {
-                logger.debug('ポートが開放されていることを確認しました');
-                session.portConnectable = true;
-                onConnectable();
-                return;
-            }
-            logger.debug('ポートは解放されていません');
-            onUnconnectable();
-        }).catch((e: any) => {
-            logger.debug('ポート開放状況の確認中にエラーが発生しました');
-            logger.error(e);
-            onError();
-        });
 }

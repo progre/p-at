@@ -8,13 +8,21 @@ var PlayerCtrler = [
     ($scope: any, $routeParams: any, $cookies: any, $http: ng.IHttpService) => {
         var userInfoRepos = new UserInfoRepos(new CookieInfrastructure($cookies));
         var userInfo = userInfoRepos.get();
-
         $scope.localIp = '127.0.0.1:' + ($cookies.localPort || 7144);
-        $scope.streamId = $routeParams.streamid;
-        $scope.remoteIp = $routeParams.remoteip;
 
-        $http.get('/api/1/channels/' + $routeParams.streamid)
+        $http.get('/api/1/search?name=' + $routeParams.name)
             .then(res => {
+                var result = <any>res.data;
+                if (!result.portConnectable) {
+                    return;
+                }
+                $scope.streamId = result.id;
+                $scope.remoteIp = result.ip;
+
+                return $http.get('/api/1/channels/' + $scope.streamId)
+            })
+            .then(res => {
+                console.log(res);
                 var channel = (<any>res.data).channel;
                 $scope.name = channel.name;
 

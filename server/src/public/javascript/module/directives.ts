@@ -1,7 +1,12 @@
-declare var Silverlight: any;
+ï»¿declare var Silverlight: any;
 
 var transitionOption = ' 1.25s';
 
+// domã«sliverlightãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’è¤‡æ•°ç½®ã‘ã¦ã€jsã®controllerã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã§æ“ä½œã§ãã‚‹
+
+var ctrler: any;
+var streamId: string;
+var remoteIp: string;
 // .player(.silverlight/.flash)
 //   object(silverlight/flash)
 export var silverlight = () => ({
@@ -19,13 +24,18 @@ export var silverlight = () => ({
         var sl = getSilverlight(
             chrome,
             attrs.localip,
-            attrs.streamid,
-            attrs.remoteip,
+            c => {
+                ctrler = c;
+                if (ctrler != null && streamId != null && remoteIp != null) {
+                    ctrler.Play(streamId, remoteIp);
+                }
+//                ctrler.Play(streamId, remoteIp);
+            },
             () => element.click(),
             (width, height) => {
                 dummy.css('height', dummy.width() * height / width);
                 sl.css('height', dummy.width() * height / width);
-                // ƒEƒBƒ“ƒhƒEƒTƒCƒY•ÏX‚ÉƒvƒŒƒCƒ„[ƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY‚ğ•Ï‚¦‚é
+                // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºå¤‰æ›´æ™‚ã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºã‚’å¤‰ãˆã‚‹
                 resize(() => {
                     dummy.css('height', dummy.width() * height / width);
                     sl.css({
@@ -39,21 +49,35 @@ export var silverlight = () => ({
 
         element.click(function (eventObject) {
         });
-        // todo: ƒŠƒtƒ@ƒNƒ^ƒŠƒ“ƒO
+
+        // todo: ãƒªãƒ•ã‚¡ã‚¯ã‚¿ãƒªãƒ³ã‚°
+
+        attrs.$observe('streamid', function (v:any) {
+            streamId = v;
+            if (ctrler != null && streamId != null && remoteIp != null) {
+                ctrler.Play(streamId, remoteIp);
+            }
+        });
+        attrs.$observe('remoteip', function (v:any) {
+            remoteIp = v;
+            if (ctrler != null && streamId != null && remoteIp != null) {
+                ctrler.Play(streamId, remoteIp);
+            }
+        });
     }
 });
 
-function getSilverlight(chrome: boolean, localIp: string, streamId: string, remoteIp: string, onClick: Function, onMediaOpen: (width: number, height: number) => void) {
+function getSilverlight(chrome: boolean, localIp: string, onLoad: (ctrler: any) => void, onClick: Function, onMediaOpen: (width: number, height: number) => void) {
     return $(Silverlight.createObject(
         '/plugins/wmvplayer.xap',
         null,
-        Date.now().toString(),// ˆêˆÓ‚È•¶š—ñ
+        Date.now().toString(),// ä¸€æ„ãªæ–‡å­—åˆ—
         {
             width: '100%',
             height: '100%',
             background: '#000',
             version: '5.0',
-            windowless: chrome ? 'true' : 'false'// chrome‚Ítrue‚¶‚á‚È‚¢‚Æiframe‚Æ‚Ìd‚È‚è‚ªãè‚­•`‰æ‚³‚ê‚È‚¢
+            windowless: chrome ? 'true' : 'false'// chromeã¯trueã˜ã‚ƒãªã„ã¨iframeã¨ã®é‡ãªã‚ŠãŒä¸Šæ‰‹ãæç”»ã•ã‚Œãªã„
         },
         {
             onError: () => console.error('Error on Silverlight'),
@@ -62,11 +86,11 @@ function getSilverlight(chrome: boolean, localIp: string, streamId: string, remo
                 ctrler.addEventListener('click', onClick);
                 ctrler.addEventListener('mediaOpened', () => onMediaOpen(ctrler.width, ctrler.height));
                 ctrler.LocalIp = localIp;
-                ctrler.Play(streamId, remoteIp);
+                onLoad(ctrler);
             }
         },
-        null, //‰Šú‰»ƒpƒ‰ƒ[ƒ^
-        null //onLoad ƒCƒxƒ“ƒg‚É“n‚³‚ê‚é’l
+        null, //åˆæœŸåŒ–ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+        null //onLoad ã‚¤ãƒ™ãƒ³ãƒˆã«æ¸¡ã•ã‚Œã‚‹å€¤
         ))
         .css(defaultSilverlightStyle);
 }
@@ -82,14 +106,14 @@ var defaultSilverlightStyle = {
     height: '100%',
     zIndex: 2000
 };
-// transition’†‚Éoverflow‚ğ•ÏX‚·‚é‚Ætransition‚ª~‚Ü‚é
+// transitionä¸­ã«overflowã‚’å¤‰æ›´ã™ã‚‹ã¨transitionãŒæ­¢ã¾ã‚‹
 
 function getWindowSilverlightStyle(dummy: JQuery) {
     return {
-        top: dummy.position().top + 1, // 1px‚¸‚ê‚Ä‚é
+        top: dummy.position().top + 1, // 1pxãšã‚Œã¦ã‚‹
         width: '61.8%',
         height: dummy.height(),
-        zIndex: '',// todo: 0.125s“K‰‚ğ’x‚ç‚¹‚é
+        zIndex: '',// todo: 0.125sé©å¿œã‚’é…ã‚‰ã›ã‚‹
         transitionTimingFunction: 'ease-in'
     };
 }

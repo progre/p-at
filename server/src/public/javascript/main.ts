@@ -17,7 +17,7 @@ app.config([
         $routeProvider
             .when(root, {
                 templateUrl: root + 'html/index.html', controller: 'IndexCtrler'
-            }).when(root + 'player.html', {
+            }).when(root + 'channel/:name', {
                 templateUrl: root + 'html/player.html', controller: 'PlayerCtrler'
             }).otherwise({
                 templateUrl: root + 'html/404.html'

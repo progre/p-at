@@ -16,7 +16,7 @@ ul.media-list
       span.glyphicon.glyphicon-send(style='color: #469;', ng-switch-when='Game/Other')
       span.glyphicon.glyphicon-bullhorn(style='color: #8c7;', ng-switch-default)
     .media-body
-      a(ng-href='{{ !isClickable(channel) ? "" : "player.html?streamid=" + channel.id + "&remoteip=" + channel.ip }}', target='_self', title='{{ !portConnectable ? "PeerCastの導入後に視聴可能になります" : "" }}')
+      a(ng-href='{{ !isClickable(channel) ? "" : "channel/" + channel.name }}', target='_self', title='{{ !portConnectable ? "PeerCastの導入後に視聴可能になります" : "" }}')
         button.btn.btn-default(style='text-align: left; width: 100%; padding-left: 0; padding-right: 0;', ng-disabled='!isClickable(channel)')
           div(style='margin-left: 12px; margin-right: 12px;')
             ng-switch(on='channel.id')
