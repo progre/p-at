@@ -1,6 +1,60 @@
 ﻿declare var Silverlight: any;
+declare var swfobject: any;
 
 var transitionOption = ' 1.25s';
+
+export var player = () => ({
+    restrict: 'E',
+    replace: true,
+    template: '<div><div class="_player_dummy" style="' + dummyStyle + '"></div></div>',
+    link: (scope: any, element: JQuery, attrs: any) => {
+        function isReady() {
+            var flash = (<any>window)[id] || (<any>document)[id];
+            return flash != null && flash.player != null
+                && attrs['streamid'] != null && attrs['remoteip'];
+        }
+        function play() {
+            var flash = (<any>window)[id] || (<any>document)[id];
+            flash.play(attrs['streamid'], attrs['remoteip']);
+        }
+
+        attrs.$observe('streamid', (v: any) => {
+            if (isReady()) {
+                play();
+            }
+        });
+        attrs.$observe('remoteip', (v: any) => {
+            if (isReady()) {
+                play();
+            }
+        });
+
+        var id = '_player_' + Date.now();
+        element.attr('id', id);
+        var flashvars = {
+        };
+        var params = {
+            menu: 'false',
+            scale: 'noScale',
+            allowFullscreen: 'true',
+            allowScriptAccess: 'always',
+            bgcolor: '',
+            wmode: 'direct' // can cause issues with FP settings & webcam
+        };
+        var attributes = {
+            id: id
+        };
+        swfobject.embedSWF(
+            '/plugin/flvplayer.swf',
+            id, '100%', '100%', '10.0.0',
+            '/plugin/expressInstall.swf',
+            flashvars, params, attributes, (result: any) => {
+                var flash = result.ref;
+                flash.play("http://192.168.56.1:7146/stream/eb2ad5998fa557913f8ccccf88bf06cd.flv");
+            });
+    }
+});
+
 
 // domにsliverlightプレイヤーを複数置けて、jsのcontrollerインスタンスで操作できる
 
@@ -29,7 +83,7 @@ export var silverlight = () => ({
                 if (ctrler != null && streamId != null && remoteIp != null) {
                     ctrler.Play(streamId, remoteIp);
                 }
-//                ctrler.Play(streamId, remoteIp);
+                //                ctrler.Play(streamId, remoteIp);
             },
             () => element.click(),
             (width, height) => {
@@ -52,13 +106,13 @@ export var silverlight = () => ({
 
         // todo: リファクタリング
 
-        attrs.$observe('streamid', function (v:any) {
+        attrs.$observe('streamid', function (v: any) {
             streamId = v;
             if (ctrler != null && streamId != null && remoteIp != null) {
                 ctrler.Play(streamId, remoteIp);
             }
         });
-        attrs.$observe('remoteip', function (v:any) {
+        attrs.$observe('remoteip', function (v: any) {
             remoteIp = v;
             if (ctrler != null && streamId != null && remoteIp != null) {
                 ctrler.Play(streamId, remoteIp);
@@ -69,7 +123,7 @@ export var silverlight = () => ({
 
 function getSilverlight(chrome: boolean, localIp: string, onLoad: (ctrler: any) => void, onClick: Function, onMediaOpen: (width: number, height: number) => void) {
     return $(Silverlight.createObject(
-        '/plugins/wmvplayer.xap',
+        '/plugin/wmvplayer.xap',
         null,
         Date.now().toString(),// 一意な文字列
         {

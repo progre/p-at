@@ -84,12 +84,17 @@ module.exports = function(grunt) {
           filter: 'isFile'
         }]
       },
-      plugins: {
+      plugin: {
         files: [{
           expand: true,
           cwd: '../wmvplayer/wmvplayer/Bin/Release/',
           src: ['wmvplayer.xap'],
-          dest: 'app/public/plugins/'
+          dest: 'app/public/plugin/'
+        },{
+          expand: true,
+          cwd: '../flvplayer/bin/',
+          src: ['flvplayer.swf'],
+          dest: 'app/public/plugin/'
         }]
       },
       deploy: {
@@ -174,6 +179,10 @@ module.exports = function(grunt) {
     'debug-build',
     'serve'
   ]);
+  grunt.registerTask('offline', [
+    'debug-build-offline',
+    'serve'
+  ]);
   grunt.registerTask('serve', [
     'express',
     'watch'
@@ -191,11 +200,17 @@ module.exports = function(grunt) {
     'tsd:refresh',
     'build-ts'
   ]);
+  grunt.registerTask('debug-build-offline', [
+    'configure-jade',
+    'jade:debug',
+    'stylus',
+    'build-ts'
+  ]);
   grunt.registerTask('release-build', [
     'configure-jade',
     'jade:release',
     'stylus',
-    'tsd:refresh',
+    'tsd:reinstall',
     'build-ts',
     'requirejs'
   ]);

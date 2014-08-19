@@ -28,7 +28,7 @@ app.config([
 
 app.controller('IndexCtrler', IndexCtrler);
 app.controller('PlayerCtrler', PlayerCtrler);
-app.directive('silverlight', directives.silverlight);
+app.directive('player', directives.player);
 app.directive('channellist', directives.channelList);
 
 angular.bootstrap(<any>document, ['app']);

@@ -1,7 +1,7 @@
 ﻿import express = require('express');
 require('express-resource');
-var session: typeof express.session = require('express-session');
-var cookieParser: typeof express.cookieParser = require('cookie-parser');
+var session: any = require('express-session');
+var cookieParser: any = require('cookie-parser');
 import log4js = require('log4js');
 import functions = require('./infrastructure/functions');
 import YPWatcher = require('./infrastructure/ypwatcher');

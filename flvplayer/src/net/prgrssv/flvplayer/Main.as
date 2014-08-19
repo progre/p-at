@@ -15,6 +15,7 @@ package net.prgrssv.flvplayer
 		
 		public function Main():void
 		{
+			stage.color = 0;
 			if (ExternalInterface.available)
 			{
 				ExternalInterface.addCallback("play", this.player.play);
@@ -25,7 +26,6 @@ package net.prgrssv.flvplayer
 						throw new Error();
 					player.resize(stage.stageWidth, stage.stageHeight);
 					stage.addChild(player.video);
-					player.play("http://192.168.56.1:7146/stream/eb2ad5998fa557913f8ccccf88bf06cd.flv");
 				});
 		}
 		

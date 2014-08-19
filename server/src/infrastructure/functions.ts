@@ -6,13 +6,13 @@ import log4js = require('log4js');
 var logger = log4js.getLogger('server');
 
 export function requirePortConnectable(req: express.Request, onConnectable: Function, onUnconnectable: Function, onError: Function) {
-    var session: any = req.session;
+    var session: any = (<any>req).session;
     if (session.portConnectable) {
         onConnectable();
         return;
     }
     var ip = req.headers['x-forwarded-for'] || req.ip;
-    var port = session.port || 7144;
+    var port = session.port || 7146;
     logger.debug(ip + ':' + port + 'のポート開放状況は不明です');
     checkPort(ip, port)
         .then(val => {
