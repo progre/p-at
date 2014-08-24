@@ -6,22 +6,22 @@
   "bundle": "src/typings/tsd.d.ts",
   "installed": {
     "jquery/jquery.d.ts": {
-      "commit": "298b893f08957e2409cd7c6056a29808426a4f54"
+      "commit": "a174e90c41b5fe6eb9c87dcee85d8af29c04adb3"
     },
     "angularjs/angular.d.ts": {
-      "commit": "298b893f08957e2409cd7c6056a29808426a4f54"
+      "commit": "a174e90c41b5fe6eb9c87dcee85d8af29c04adb3"
     },
     "angularjs/angular-route.d.ts": {
-      "commit": "298b893f08957e2409cd7c6056a29808426a4f54"
+      "commit": "a174e90c41b5fe6eb9c87dcee85d8af29c04adb3"
     },
     "node/node.d.ts": {
-      "commit": "298b893f08957e2409cd7c6056a29808426a4f54"
+      "commit": "a174e90c41b5fe6eb9c87dcee85d8af29c04adb3"
     },
     "express/express.d.ts": {
-      "commit": "298b893f08957e2409cd7c6056a29808426a4f54"
+      "commit": "a174e90c41b5fe6eb9c87dcee85d8af29c04adb3"
     },
     "angularjs/angular-cookies.d.ts": {
-      "commit": "298b893f08957e2409cd7c6056a29808426a4f54"
+      "commit": "a174e90c41b5fe6eb9c87dcee85d8af29c04adb3"
     }
   }
 }

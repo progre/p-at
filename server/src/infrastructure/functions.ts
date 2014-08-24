@@ -6,7 +6,7 @@ import log4js = require('log4js');
 var logger = log4js.getLogger('server');
 
 export function requirePortConnectable(req: express.Request, onConnectable: Function, onUnconnectable: Function, onError: Function) {
-    var session: any = req.session;
+    var session: any = (<any>req).session;
     if (session.portConnectable) {
         onConnectable();
         return;
