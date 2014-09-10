@@ -12,7 +12,7 @@ export function controller(ypWatcher: YPWatcher) {
         index: (req: express.Request, res: express.Response) => {
             var channels = Enumerable.from(ypWatcher.channels)
                 .select(x => {
-                    if (x.type === 'FLV' || x.name.indexOf('(要帯域チェック)') >= 0) {
+                    if (x.name.indexOf('(要帯域チェック)') >= 0) {
                         x = x.clone();
                         x.id = '00000000000000000000000000000000';
                         x.ip = '';

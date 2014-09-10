@@ -1,7 +1,8 @@
 require.config({
   paths: {
     'linqjs': 'vendor/linq.min',
-    'silverlight': 'vendor/Silverlight'
+    'silverlight': 'vendor/Silverlight',
+    'swfobject': 'vendor/swfobject'
   },
-  deps: ['main', 'silverlight']
+  deps: ['main', 'silverlight', 'swfobject']
 });

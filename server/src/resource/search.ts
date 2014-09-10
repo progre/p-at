@@ -17,14 +17,16 @@ export function controller(ypWatcher: YPWatcher) {
                     res.send({
                         portConnectable: true,
                         id: channel.id,
-                        ip: channel.ip
+                        ip: channel.ip,
+                        type: channel.type
                     });
                 },
                 () => {
                     res.send({
                         portConnectable: false,
                         id: '',
-                        ip: ''
+                        ip: '',
+                        type: ''
                     });
                 }, () => {
                     res.send(500);

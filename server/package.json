@@ -21,7 +21,7 @@
   "devDependencies": {
     "grunt": "*",
     "grunt-contrib-jade": "*",
-    "grunt-contrib-stylus": "*",
+    "grunt-contrib-stylus": "~0.14",
     "grunt-contrib-copy": "*",
     "grunt-contrib-requirejs": "*",
     "grunt-contrib-watch": "*",
