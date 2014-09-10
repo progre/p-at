@@ -12,7 +12,7 @@ export function requirePortConnectable(req: express.Request, onConnectable: Func
         return;
     }
     var ip = req.headers['x-forwarded-for'] || req.ip;
-    var port = session.port || 7146;
+    var port = session.port || 7144;
     logger.debug(ip + ':' + port + 'のポート開放状況は不明です');
     checkPort(ip, port)
         .then(val => {

@@ -2,37 +2,117 @@
 declare var swfobject: any;
 
 var transitionOption = ' 1.25s';
+var dummyStyle = 'width: 100%; background-color: #333;';
+var playerStyle = 'position: absolute; display: block;';
 
-export var player = () => ({
-    restrict: 'E',
-    replace: true,
-    template: '<div><div class="_player_dummy" style="' + dummyStyle + '"></div></div>',
-    link: (scope: any, element: JQuery, attrs: any) => {
-        function isReady() {
-            var flash = (<any>window)[id] || (<any>document)[id];
-            return flash != null && flash.player != null
-                && attrs['streamid'] != null && attrs['remoteip'];
+// dummyはプラグインを置く領域のサイズを測ったりするのに必要
+export var player = () => Player.directive;
+
+class Player {
+    static directive = {
+        restrict: 'E',
+        replace: true,
+        template: '<div><div class="_player_dummy" style="' + dummyStyle + '"></div></div>',
+        link: (scope: any, element: JQuery, attrs: any) => {
+            new Player(element, attrs);
         }
-        function play() {
-            var flash = (<any>window)[id] || (<any>document)[id];
-            flash.play(attrs['streamid'], attrs['remoteip']);
+    };
+
+    private plugin: IPlugin;
+    private dummy: JQuery;
+
+    constructor(private element: JQuery, private attrs: any) {
+        this.dummy = element.children('._player_dummy');
+        attrs.$observe('streamid', (v: any) => this.onObserved());
+        attrs.$observe('remoteip', (v: any) => this.onObserved());
+        attrs.$observe('type', (v: any) => this.onObserved());
+        setOnResize(() => this.resize());
+        this.resize();
+    }
+
+    resize() {
+        var pluginLoaded = this.plugin != null;
+        var videoWidth = pluginLoaded ? this.plugin.videoWidth() : 4;
+        var videoHeight = pluginLoaded ? this.plugin.videoHeight() : 3;
+        var width = this.dummy.width();
+        var newHeight = width * videoHeight / videoWidth;
+        this.dummy.height(newHeight);
+        if (pluginLoaded) {
+            this.plugin.setSize(width, newHeight);
         }
+    }
 
-        attrs.$observe('streamid', (v: any) => {
-            if (isReady()) {
-                play();
-            }
-        });
-        attrs.$observe('remoteip', (v: any) => {
-            if (isReady()) {
-                play();
-            }
-        });
+    private onObserved() {
+        if (this.plugin != null || !this.isLoadable())
+            return;
+        this.plugin = this.createPlugin(this.attrs.type);
+        if (this.plugin == null)
+            return;
+        this.plugin.attach()
+            .then(() => {
+                this.resize();
+            });
+    }
 
+    private isLoadable() {
+        return !isNullOrEmpty(this.attrs['streamid'])
+            && !isNullOrEmpty(this.attrs['remoteip'])
+            && !isNullOrEmpty(this.attrs['type']);
+    }
+
+    private createPlugin(type: string): IPlugin {
+        switch (type) {
+            case 'WMV': return new SilverlightPlugin(this.element, this.attrs, this.dummy);
+            case 'FLV': return new FlashPlugin(this.element, this.attrs, this.dummy);
+        }
+    }
+}
+
+interface IPlugin {
+    attach(): Promise<void>;
+    videoWidth(): number;
+    videoHeight(): number;
+    setSize(width: number, height: number): void;
+}
+
+class FlashPlugin implements IPlugin {
+    private _videoWidth: number;
+    private _videoHeight: number;
+    private objectElem: HTMLObjectElement;
+
+    constructor(private element: JQuery, private attrs: any, private dummy: JQuery) {
+    }
+
+    attach() {
         var id = '_player_' + Date.now();
-        element.attr('id', id);
-        var flashvars = {
-        };
+        this.element.prepend('<div id="' + id + '">');
+
+        var localIp = this.attrs['localip'];
+        var streamId = this.attrs['streamid'];
+        var remoteIp = this.attrs['remoteip'];
+        var top = this.dummy.position().top + 1;
+        return FlashPlugin.embedSWF(id, { localIp: localIp }, streamId, remoteIp, top)
+            .then(result => {
+                this.objectElem = result.element;
+                this._videoWidth = result.width;
+                this._videoHeight = result.height;
+            });
+    }
+
+    videoWidth() {
+        return this._videoWidth;
+    }
+
+    videoHeight() {
+        return this._videoHeight;
+    }
+
+    setSize(width: number, height: number) {
+        this.objectElem.width = width.toString();
+        this.objectElem.height = height.toString();
+    }
+
+    private static embedSWF(id: string, flashvars: any, streamId: string, remoteIp: string, top: number): Promise<any> {
         var params = {
             menu: 'false',
             scale: 'noScale',
@@ -42,143 +122,127 @@ export var player = () => ({
             wmode: 'direct' // can cause issues with FP settings & webcam
         };
         var attributes = {
-            id: id
+            id: id,
+            style: playerStyle + ' top: ' + top + 'px'
         };
-        swfobject.embedSWF(
-            '/plugin/flvplayer.swf',
-            id, '100%', '100%', '10.0.0',
-            '/plugin/expressInstall.swf',
-            flashvars, params, attributes, (result: any) => {
-                var flash = result.ref;
-                flash.play("http://192.168.56.1:7146/stream/eb2ad5998fa557913f8ccccf88bf06cd.flv");
-            });
-    }
-});
-
-
-// domにsliverlightプレイヤーを複数置けて、jsのcontrollerインスタンスで操作できる
-
-var ctrler: any;
-var streamId: string;
-var remoteIp: string;
-// .player(.silverlight/.flash)
-//   object(silverlight/flash)
-export var silverlight = () => ({
-    restrict: 'E',
-    replace: true,
-    template: '<div><div class="dummy" style="' + dummyStyle + '"></div></div>',
-    link: (scope: any, element: JQuery, attrs: any) => {
-        var chrome = window.navigator.userAgent.indexOf('Chrome') !== -1;
-
-        var fullscreen = false;
-
-        var dummy = element.children('.dummy');
-        dummy.css('height', dummy.width() * 3 / 4);
-
-        var sl = getSilverlight(
-            chrome,
-            attrs.localip,
-            c => {
-                ctrler = c;
-                if (ctrler != null && streamId != null && remoteIp != null) {
-                    ctrler.Play(streamId, remoteIp);
-                }
-                //                ctrler.Play(streamId, remoteIp);
-            },
-            () => element.click(),
-            (width, height) => {
-                dummy.css('height', dummy.width() * height / width);
-                sl.css('height', dummy.width() * height / width);
-                // ウィンドウサイズ変更時にプレイヤーウィンドウのサイズを変える
-                resize(() => {
-                    dummy.css('height', dummy.width() * height / width);
-                    sl.css({
-                        transition: '',
-                        height: dummy.width() * height / width
-                    });
-                });
-            });
-        element.append(sl);
-        sl.css(getWindowSilverlightStyle(dummy));
-
-        element.click(function (eventObject) {
-        });
-
-        // todo: リファクタリング
-
-        attrs.$observe('streamid', function (v: any) {
-            streamId = v;
-            if (ctrler != null && streamId != null && remoteIp != null) {
-                ctrler.Play(streamId, remoteIp);
-            }
-        });
-        attrs.$observe('remoteip', function (v: any) {
-            remoteIp = v;
-            if (ctrler != null && streamId != null && remoteIp != null) {
-                ctrler.Play(streamId, remoteIp);
-            }
+        var loadedKey = id + '_loaded';
+        flashvars['loaded'] = loadedKey;
+        var dimensionChangedKey = id + '_dimension_changed';
+        flashvars['dimensionChanged'] = dimensionChangedKey;
+        return new Promise((resolve, reject) => {
+            (<any>window)[loadedKey] = () => {
+                var objectElement = (<any>window)[id] || (<any>document)[id];
+                objectElement.play(streamId, remoteIp);
+            };
+            (<any>window)[dimensionChangedKey] = function (width: number, height: number) {
+                var objectElement = (<any>window)[id] || (<any>document)[id];
+                resolve({ element: objectElement, width: width, height: height });
+            };
+            swfobject.embedSWF(
+                '/plugin/flvplayer.swf',
+                id, '100%', '0', '10.0.0',
+                '/plugin/expressInstall.swf',
+                flashvars, params, attributes);
         });
     }
-});
-
-function getSilverlight(chrome: boolean, localIp: string, onLoad: (ctrler: any) => void, onClick: Function, onMediaOpen: (width: number, height: number) => void) {
-    return $(Silverlight.createObject(
-        '/plugin/wmvplayer.xap',
-        null,
-        Date.now().toString(),// 一意な文字列
-        {
-            width: '100%',
-            height: '100%',
-            background: '#000',
-            version: '5.0',
-            windowless: chrome ? 'true' : 'false'// chromeはtrueじゃないとiframeとの重なりが上手く描画されない
-        },
-        {
-            onError: () => console.error('Error on Silverlight'),
-            onLoad: (sl: any, args: any) => {
-                var ctrler = sl.Content.Controller;
-                ctrler.addEventListener('click', onClick);
-                ctrler.addEventListener('mediaOpened', () => onMediaOpen(ctrler.width, ctrler.height));
-                ctrler.LocalIp = localIp;
-                onLoad(ctrler);
-            }
-        },
-        null, //初期化パラメータ
-        null //onLoad イベントに渡される値
-        ))
-        .css(defaultSilverlightStyle);
 }
 
-var dummyStyle = 'width: 100%; background-color: #333;';
-var defaultSilverlightStyle = {
-    position: 'absolute',
-    display: 'block',
-    transition: 'top 0.125s, width 0.125s, height 0.125s',
+class SilverlightPlugin implements IPlugin {
+    private static defaultSilverlightStyle = {
+        position: 'absolute',
+        display: 'block',
+        transition: 'top 0.125s, width 0.125s, height 0.125s',
 
-    top: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: 2000
-};
-// transition中にoverflowを変更するとtransitionが止まる
-
-function getWindowSilverlightStyle(dummy: JQuery) {
-    return {
-        top: dummy.position().top + 1, // 1pxずれてる
-        width: '61.8%',
-        height: dummy.height(),
-        zIndex: '',// todo: 0.125s適応を遅らせる
-        transitionTimingFunction: 'ease-in'
+        top: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 2000
     };
-}
 
-var fullscreenSilverlightStyle = {
-    top: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: 2000,
-    transitionTimingFunction: 'ease'
-};
+    private _videoWidth: number;
+    private _videoHeight: number;
+    private silverlight: JQuery;
+    private ctrler: any;
+    private streamId: string;
+    private remoteIp: string;
+
+    constructor(private element: JQuery, private attrs: any, private dummy: JQuery) {
+    }
+
+    attach() {
+        return new Promise<void>((resolve, reject) => {
+            var chrome = window.navigator.userAgent.indexOf('Chrome') !== -1;
+            console.log(this.attrs.localip);
+            this.silverlight = SilverlightPlugin.getSilverlight(
+                chrome,
+                this.attrs.localip,
+                ctrler => {
+                    ctrler.Play(this.attrs.streamid, this.attrs.remoteip);
+                },
+                () => this.element.click(),
+                (width, height) => {
+                    this._videoWidth = width;
+                    this._videoHeight = height;
+                    resolve();
+                });
+            this.element.append(this.silverlight);
+            this.silverlight.css(this.getWindowSilverlightStyle(this.dummy));
+        });
+    }
+
+    videoWidth() {
+        return this._videoWidth;
+    }
+
+    videoHeight() {
+        return this._videoHeight;
+    }
+
+    setSize(width: number, height: number) {
+        this.silverlight.css({
+            transition: '',
+            height: height
+        });
+    }
+
+    private getWindowSilverlightStyle(dummy: JQuery) {
+        return {
+            top: dummy.position().top + 1, // 1pxずれてる
+            width: '61.8%',
+            height: dummy.height(),
+            zIndex: '',// todo: 0.125s適応を遅らせる
+            transitionTimingFunction: 'ease-in'
+        };
+    }
+
+    private static getSilverlight(chrome: boolean, localIp: string, onLoad: (ctrler: any) => void, onClick: Function, onMediaOpen: (width: number, height: number) => void) {
+        return $(Silverlight.createObject(
+            '/plugin/wmvplayer.xap',
+            null,
+            Date.now().toString(),// 一意な文字列
+            {
+                width: '100%',
+                height: '100%',
+                background: '#000',
+                version: '5.0',
+                windowless: chrome ? 'true' : 'false'// chromeはtrueじゃないとiframeとの重なりが上手く描画されない
+            },
+            {
+                onError: () => console.error('Error on Silverlight'),
+                onLoad: (sl: any, args: any) => {
+                    var ctrler = sl.Content.Controller;
+                    ctrler.addEventListener('click', onClick);
+                    ctrler.addEventListener('mediaOpened', () => onMediaOpen(ctrler.width, ctrler.height));
+                    ctrler.LocalIp = localIp;
+                    onLoad(ctrler);
+                }
+            },
+            null, //初期化パラメータ
+            null //onLoad イベントに渡される値
+            ))
+            .css(this.defaultSilverlightStyle);
+    }
+}
 
 export var channelList = () => ({
     restrict: 'E',
@@ -186,7 +250,7 @@ export var channelList = () => ({
     templateUrl: '/html/list.html'
 });
 
-function resize(onResize: Function) {
+function setOnResize(onResize: Function) {
     var timer: number = null;
     $(window).resize(function () {
         if (timer != null) {
@@ -194,4 +258,8 @@ function resize(onResize: Function) {
         }
         timer = setTimeout(() => onResize(), 10);
     });
+}
+
+function isNullOrEmpty(str: string) {
+    return str == null || str === '';
 }

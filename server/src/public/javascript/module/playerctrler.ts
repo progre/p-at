@@ -18,6 +18,7 @@ var PlayerCtrler = [
                 }
                 $scope.streamId = result.id;
                 $scope.remoteIp = result.ip;
+                $scope.type = result.type;
 
                 return $http.get('/api/1/channels/' + $scope.streamId)
             })

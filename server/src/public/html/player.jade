@@ -7,7 +7,7 @@ header
           | 一覧に戻る
 .player-page.two-pain
   main
-    player(localip='{{localIp}}', streamid='{{streamId}}', remoteip='{{remoteIp}}')
+    player(localip='{{localIp}}', streamid='{{streamId}}', remoteip='{{remoteIp}}', type='{{type}}')
     .panel.panel-default
       .panel-heading
         span.clickable-star(style='line-height: 0;', ng-show='favorite === true', ng-click='removeFavorite()')
