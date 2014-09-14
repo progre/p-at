@@ -74,6 +74,7 @@ package net.prgrssv.flvplayer
 				return;
 			}
 			currentSource = source;
+			netStream.soundTransform = new SoundTransform(0.5);
 			netStream.play(source);
 		}
 		
@@ -86,7 +87,6 @@ package net.prgrssv.flvplayer
 			}
 			// volumeプロパティを直接書き換えても反映されない。オブジェクトごと割り当て直す必要がある。
 			netStream.soundTransform = new SoundTransform(volume);
-			trace(netStream.soundTransform.volume);
 		}
 		
 		public function decrementVolume():void
@@ -97,7 +97,6 @@ package net.prgrssv.flvplayer
 				volume = 0.0;
 			}
 			netStream.soundTransform = new SoundTransform(volume);
-			trace(netStream.soundTransform.volume);
 		}
 	}
 }

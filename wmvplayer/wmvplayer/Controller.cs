@@ -63,5 +63,25 @@ namespace wmvplayer
             media.Source = new Uri(string.Format("http://{0}/admin?cmd=stop&id={1}", LocalIp, streamId));
             media.Play();
         }
+
+        public void IncrementVolume()
+        {
+            var volume = media.Volume + 0.05;
+            if (volume > 1.0)
+            {
+                volume = 1.0;
+            }
+            media.Volume = volume;
+        }
+
+        public void DecrementVolume()
+        {
+            var volume = media.Volume - 0.05;
+            if (volume < 0.0)
+            {
+                volume = 0.0;
+            }
+            media.Volume = volume;
+        }
     }
 }

@@ -24,5 +24,17 @@ namespace wmvplayer
             Controller = new Controller(this, media);
             HtmlPage.RegisterScriptableObject("Controller", Controller);
         }
+
+        private void UserControl_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                Controller.IncrementVolume();
+            }
+            else if (e.Delta < 0)
+            {
+                Controller.DecrementVolume();
+            }
+        }
     }
 }
