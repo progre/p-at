@@ -1,59 +1,41 @@
-header
-  nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
-    .navbar-header(style='margin-left: 4px;')
-      a.navbar-brand(href='/')
-        | p@ (α)
-
-.sticky
-  .container-fluid
-    main.col-xs-8
-      div(ng-hide='portConnectable')
-        .jumbotron(style='color: white; background-image: url(/img/jumbotron.jpg); background-position: center; padding: 56px;')
-          h1 p@
-          p(style='margin-top: 32px;')
-            | p@ は PeerCast の配信をブラウザで視聴できるサービスです。<br>
-            | ご利用にはクライアントアプリの導入が必要です。
-          p <a href='http://www.pecastation.org'>こちら</a> からクライアントアプリをダウンロードしてください。
-          //- form.form-inline
-            .form-group
-              label.control-label 導入済みの場合、使用しているTCPポート番号:
-              input.form-control(type='number', value='7144', min='1', max='65535', style='width: 80px; margin-left: 0.5em;')
-              button.btn.btn-default(style='margin-left: 0.5em;') 再試行
-      channellist
-      div(ng-show='ypInfos == null')
-        | 最新の情報を取得中...
-      .panel.panel-default(ng-show='ypInfos != null')
-        .panel-heading YPからのお知らせ
-        .list-group
-          .list-group-item(ng-repeat='info in ypInfos')
-            b {{info.line1}}<br>
-            div(style='padding-left: 1em;')
-              span {{info.line2}}<br>
-              span(ng-show='info.line3.length > 0') 「{{info.line3}}」
-    aside.col-xs-4.affix(style='right: 0')
-      //-.panel.panel-default
-        .panel-heading 最近の配信
-        .list-group
-          .list-group-item なにか
-          .list-group-item なにか
-          .list-group-item なにか
-      .panel.panel-default(ng-show='events != null')
-        .panel-heading イベント
-        .list-group
-          .list-group-item(ng-repeat='info in events')
-            b {{info.line1}}<br>
-            div(style='padding-left: 1em;')
-              span {{info.line2}}
-              div
-                a(href='{{info.track.url}}', target='_blank') 詳細
-                a(href='{{info.url}}', target='_blank', style='margin-left: 1em;') Wiki
-
-      //- 配信開始のお知らせ
-  #push
-//- footer.navbar.navbar-default(style='height: 52px;')
-footer(style='height: 52px;')
-  .col-md-12
-    p.pull-right
-      span.text-muted.pull-right © <a href='https://twitter.com/progremaster'>ぷろぐれ</a>. All rights reserved
-    p
-      span.text-muted このサイトを利用して発生したいかなる問題もサイト運営者は責任を負いません。
+main.col-xs-8
+  div(ng-hide='portConnectable')
+    .jumbotron(style='color: white; background-image: url(/img/jumbotron.jpg); background-position: center; padding: 56px;')
+      h1 p@
+      p(style='margin-top: 32px;')
+        | p@ は PeerCast の配信をブラウザで視聴できるサービスです。<br>
+        | ご利用にはクライアントアプリの導入が必要です。
+      p <a href='http://www.pecastation.org'>こちら</a> からクライアントアプリをダウンロードしてください。
+      //- form.form-inline
+        .form-group
+          label.control-label 導入済みの場合、使用しているTCPポート番号:
+          input.form-control(type='number', value='7144', min='1', max='65535', style='width: 80px; margin-left: 0.5em;')
+          button.btn.btn-default(style='margin-left: 0.5em;') 再試行
+  channellist
+  div(ng-show='ypInfos == null')
+    | 最新の情報を取得中...
+  .panel.panel-default(ng-show='ypInfos != null')
+    .panel-heading YPからのお知らせ
+    .list-group
+      .list-group-item(ng-repeat='info in ypInfos')
+        b {{info.line1}}<br>
+        div(style='padding-left: 1em;')
+          span {{info.line2}}<br>
+          span(ng-show='info.line3.length > 0') 「{{info.line3}}」
+aside.col-xs-4.affix(style='right: 0')
+  //-.panel.panel-default
+    .panel-heading 最近の配信
+    .list-group
+      .list-group-item なにか
+      .list-group-item なにか
+      .list-group-item なにか
+  .panel.panel-default(ng-show='events != null')
+    .panel-heading イベント
+    .list-group
+      .list-group-item(ng-repeat='info in events')
+        b {{info.line1}}<br>
+        div(style='padding-left: 1em;')
+          span {{info.line2}}
+          div
+            a(href='{{info.track.url}}', target='_blank') 詳細
+            a(href='{{info.url}}', target='_blank', style='margin-left: 1em;') Wiki

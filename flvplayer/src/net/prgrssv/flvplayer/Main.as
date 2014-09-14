@@ -4,13 +4,16 @@ package net.prgrssv.flvplayer
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.external.ExternalInterface;
+	import org.libspark.ui.SWFWheel;
 	
 	/**
 	 * ...
 	 * @author ぷろぐれ
 	 */
-	[SWF(backgroundColor = "#000000")]
+	[SWF(backgroundColor="#000000")]
+	
 	public class Main extends Sprite
 	{
 		private var player:Player;
@@ -24,7 +27,8 @@ package net.prgrssv.flvplayer
 				ExternalInterface.addCallback("play", this.player.play);
 				player.addEventListener(Player.DIMENSION_CHANGE, function():void
 					{
-						if (ExternalInterface.call(params["dimensionChanged"], player.width, player.height) === null) {
+						if (ExternalInterface.call(params["dimensionChanged"], player.width, player.height) === null)
+						{
 							throw new Error(params["dimensionChanged"]);
 						}
 					});
@@ -45,10 +49,27 @@ package net.prgrssv.flvplayer
 					stage.addChild(player.video);
 					if (ExternalInterface.available)
 					{
-						if (ExternalInterface.call(params["loaded"]) === null) {
+						if (ExternalInterface.call(params["loaded"]) === null)
+						{
 							throw new Error(params["loaded"]);
 						}
 					}
+					
+					SWFWheel.initialize(stage);
+					SWFWheel.browserScroll = false;
+					
+					stage.addEventListener(MouseEvent.MOUSE_WHEEL, function(ev:MouseEvent):void
+						{
+							if (ev.delta > 0)
+							{
+								player.incrementVolume();
+							}
+							else if (ev.delta < 0)
+							{
+								player.decrementVolume();
+							}
+							ev.stopPropagation();
+						});
 				});
 		}
 		

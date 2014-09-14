@@ -69,25 +69,35 @@ package net.prgrssv.flvplayer
 		public function play(streamId:String, remoteIp:String):void
 		{
 			var source:String = "http://" + localIp + "/stream/" + streamId + ".flv?tip=" + remoteIp;
-			if (currentSource != null && source == currentSource) {
+			if (currentSource != null && source == currentSource)
+			{
 				return;
 			}
 			currentSource = source;
 			netStream.play(source);
 		}
 		
-		public function setVolume(volumeStr:String):void
+		public function incrementVolume():void
 		{
-			var volume:Number = parseFloat(volumeStr) / 100.0;
-			if (volume < 0)
-			{
-				volume = 0;
-			}
-			else if (volume > 1.0)
+			var volume:Number = netStream.soundTransform.volume + 0.05;
+			if (volume > 1.0)
 			{
 				volume = 1.0;
 			}
+			// volumeプロパティを直接書き換えても反映されない。オブジェクトごと割り当て直す必要がある。
 			netStream.soundTransform = new SoundTransform(volume);
+			trace(netStream.soundTransform.volume);
+		}
+		
+		public function decrementVolume():void
+		{
+			var volume:Number = netStream.soundTransform.volume - 0.05;
+			if (volume < 0.0)
+			{
+				volume = 0.0;
+			}
+			netStream.soundTransform = new SoundTransform(volume);
+			trace(netStream.soundTransform.volume);
 		}
 	}
 }
