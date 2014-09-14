@@ -6,16 +6,7 @@ meta(name='keywords', content='p@,p-at,PeerCast,ピアキャスト,配信,動画
 link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans')
 link(rel='stylesheet', href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
 link(rel='stylesheet', href='#{root}css/style.css')
-header
-  nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
-    .navbar-header(style='margin-left: 4px;')
-      a.navbar-brand(href='/')
-        | p@ (α)
-      ul.nav.navbar-nav
-        li(ng-class='getClass("/info.html")')
-          a(href='info.html')
-            | ライセンス情報
-#view.container-fluid(ng-view)
+#view(ng-view)
   div(style='text-align: center; margin: 40px auto; font-size: 24px')
     | ⏳
 footer
