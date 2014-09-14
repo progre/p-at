@@ -28,17 +28,15 @@ package net.prgrssv.flvplayer
 				player.addEventListener(Player.DIMENSION_CHANGE, function():void
 					{
 						if (ExternalInterface.call(params["dimensionChanged"], player.width, player.height) === null)
-						{
 							throw new Error(params["dimensionChanged"]);
-						}
 					});
 			}
+			
 			onStageAdded(function(e:Event = null):void
 				{
 					if (stage == null)
-					{
 						throw new Error();
-					}
+					
 					stage.scaleMode = StageScaleMode.NO_SCALE;
 					stage.align = StageAlign.TOP_LEFT;
 					stage.addEventListener(Event.RESIZE, function(e:Event):void
@@ -50,16 +48,17 @@ package net.prgrssv.flvplayer
 					if (ExternalInterface.available)
 					{
 						if (ExternalInterface.call(params["loaded"]) === null)
-						{
 							throw new Error(params["loaded"]);
-						}
 					}
 					
 					SWFWheel.initialize(stage);
 					SWFWheel.browserScroll = false;
-					
 					stage.addEventListener(MouseEvent.MOUSE_WHEEL, function(ev:MouseEvent):void
 						{
+							var xOut:Boolean = ev.localX < 0 || stage.stageWidth <= ev.localX;
+							var yOut:Boolean = ev.localY < 0 || stage.stageHeight <= ev.localY;
+							if (xOut || yOut)
+								return;
 							if (ev.delta > 0)
 							{
 								player.incrementVolume();
@@ -68,7 +67,6 @@ package net.prgrssv.flvplayer
 							{
 								player.decrementVolume();
 							}
-							ev.stopPropagation();
 						});
 				});
 		}
