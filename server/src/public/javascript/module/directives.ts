@@ -171,10 +171,7 @@ class SilverlightPlugin implements IPlugin {
 
     attach() {
         return new Promise<void>((resolve, reject) => {
-            var chrome = window.navigator.userAgent.indexOf('Chrome') !== -1;
-            console.log(this.attrs.localip);
             this.silverlight = SilverlightPlugin.getSilverlight(
-                chrome,
                 this.attrs.localip,
                 ctrler => {
                     ctrler.Play(this.attrs.streamid, this.attrs.remoteip);
@@ -215,7 +212,8 @@ class SilverlightPlugin implements IPlugin {
         };
     }
 
-    private static getSilverlight(chrome: boolean, localIp: string, onLoad: (ctrler: any) => void, onClick: Function, onMediaOpen: (width: number, height: number) => void) {
+    // chromeはwindowlessがtrueじゃないとiframeとの重なりが上手く描画されないが、代わりにマウスホイールが効かなくなる
+    private static getSilverlight(localIp: string, onLoad: (ctrler: any) => void, onClick: Function, onMediaOpen: (width: number, height: number) => void) {
         return $(Silverlight.createObject(
             '/plugin/wmvplayer.xap',
             null,
@@ -225,7 +223,6 @@ class SilverlightPlugin implements IPlugin {
                 height: '100%',
                 background: '#000',
                 version: '5.0',
-                windowless: chrome ? 'true' : 'false'// chromeはtrueじゃないとiframeとの重なりが上手く描画されない
             },
             {
                 onError: () => console.error('Error on Silverlight'),

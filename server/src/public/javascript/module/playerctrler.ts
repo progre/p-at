@@ -23,7 +23,6 @@ var PlayerCtrler = [
                 return $http.get('/api/1/channels/' + $scope.streamId)
             })
             .then(res => {
-                console.log(res);
                 var channel = (<any>res.data).channel;
                 $scope.name = channel.name;
 
