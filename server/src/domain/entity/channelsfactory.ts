@@ -6,6 +6,7 @@ export function fromIndexTxt(body: string, yp: string) {
         .where(line => line.length > 0)
         .select(line => line.split('<>'))
         .select(entries => entries.map(unparseSpecialLetter))
+        .where(entries => entries.length === 19)
         .select(entries => new Channel(
             entries[0],
             entries[1],
